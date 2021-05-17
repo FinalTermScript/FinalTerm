@@ -1,14 +1,21 @@
 import Connect
 from tkinter import *
 from tkinter.ttk import *
+from bs4 import BeautifulSoup
+import xml.etree.ElementTree as ET
+from xml.etree.ElementTree import Element, dump, ElementTree
 
 class Interface:
     def changeValue(self, index, value, op):
         b_index = self.line_select.current()
-        self.tem.getUniversiryInfo_line(b_index)
+        self.temp = self.tem.getUniversiryInfo_line(b_index)
 
 
     def __init__(self):
+        #======= 임시로 생성한 리스트 ========
+        self.line_list = []
+
+        #==================================
         self.tem = Connect.CarrerNetPassing()
         self.window = Tk()
         self.window.resizable(False, False)
@@ -44,7 +51,7 @@ class Interface:
         self.canvas.create_text(40, 160, text="학과")
         self.department_select = Combobox(self.window)
         list = [1,2,3,4,5]
-        self.department_select['value'] = list # 학과를 xml로 로드해서 가져와야함 (리스트로 받는다)
+        self.department_select['value'] = self.line_list # 학과를 xml로 로드해서 가져와야함 (리스트로 받는다)
         self.department_select.place(x=100, y=150)
 
         self.window.mainloop()
