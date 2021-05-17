@@ -14,6 +14,23 @@ class CarrerNetPassing:
         respond_body = rq.read()
         print(respond_body.decode('utf-8'))
 
+    def getUniversiryInfo_line(self, line):
+        print(line)
+        conn = http.client.HTTPConnection(self.__Server)
+        self.str = "http://www.career.go.kr/cnet/openapi/getOpenApi?apiKey=fecd1f7f737539284f53c14621096584&svcType=api&svcCode=MAJOR&contentType=xml&gubun=univ_list"
+        if line == 0:
+            conn.request("GET", self.str)
+        else:
+            line += 100390
+            conn.request("GET", self.str+"&subject="+str(line))
+
+        rq = conn.getresponse()
+        print(rq.status, rq.reason)
+        respond_body = rq.read()
+        print(respond_body.decode('utf-8'))
+
+    def getRegionInfo(self, region):
+        pass
 
 
 CarrerNetPassing()
