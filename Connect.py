@@ -1,7 +1,5 @@
 import http.client
-from xml.etree.ElementTree import Element, SubElement, ElementTree
-import json
-import os
+
 
 class CarrerNetPassing:
     # 초기화 : 서버, Key / PlayerID, AccountID는 함수에서 받아옴.
@@ -29,6 +27,7 @@ class CarrerNetPassing:
         rq = conn.getresponse()
         print(rq.status, rq.reason)
         result = rq.read().decode('utf-8')
+
         return result
 
     def getRegionInfo(self, region):
