@@ -55,7 +55,10 @@ class Interface:
         note = tree.iter('facilName')
         self.line_list.clear()
         for elt in tree.iter('facilName'):
-            self.line_list.append(elt.text)
+            temp = [x for x in elt.text.split(',')]
+            print(temp)
+            for i in temp:
+                self.line_list.append(i)
 
         self.department_select['value'] = self.line_list
         print(self.line_list)
