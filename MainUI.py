@@ -39,16 +39,16 @@ class Interface:
 # ----------------------------------- 여긴 계열 선택 ----------------------------------------------\
         self.brand = ["전체", "인문계열", "사회계열", "교육계열", "공학계열", "자연계열", "의약계열", "예체능계열"]
         self.str1 = StringVar()
-        self.str1.trace('w', self.changeDepartment)
+        self.str1.trace('w', self.changeMajor)
         self.canvas.create_text(40, 40, text="계열")
         self.line_select = Combobox(self.window, state='readonly', textvariable=self.str1, values=self.brand)
         self.line_select.place(x=100, y=30)
 
 # ----------------------------------- 여긴 학과 선택 ----------------------------------------------
         self.canvas.create_text(40, 80, text="학과")
-        self.department_select = Combobox(self.window)
-        self.department_select['value'] = self.line_list  # 학과를 xml로 로드해서 가져와야함 (리스트로 받는다)
-        self.department_select.place(x=100, y=70)
+        self.major_select = Combobox(self.window)
+        self.major_select['value'] = self.line_list  # 학과를 xml로 로드해서 가져와야함 (리스트로 받는다)
+        self.major_select.place(x=100, y=70)
 
 #----------------------------------- 여긴 OO도 선택지역 ----------------------------------------------
         self.canvas.create_text(40, 120, text="지역-도")
@@ -82,11 +82,15 @@ class Interface:
         self.show_resultButton=Button(self.window,text='검색', width=10, command=self.showResult)
         self.show_resultButton.place(x=180, y=200)
 
+        # 계열, 학과 탐색 예시 코드
+        # 계열 및 학과가 완벽히 일치해야 검색이 가능합니다
+        self.tem.getUniversiryInfo('예체능계열','광고디자인과',0)
+
         self.window.mainloop()
 
 
 
-    def changeDepartment(self, index, value, op):
+    def changeMajor(self, index, value, op):
         self.temp = self.tem.getUniversiryInfo_line(self.line_select.current())
         tree = ET.ElementTree(ET.fromstring(self.temp))
         note = tree.iter('facilName')
@@ -96,7 +100,7 @@ class Interface:
             for i in temp:
                 self.line_list.append(i)
 
-        self.department_select['value'] = self.line_list
+        self.major_select['value'] = self.line_list
 
     def showResult(self):
         pass
