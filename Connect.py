@@ -25,7 +25,6 @@ class CarrerNetPassing:
             conn.request("GET", self.str+"&subject="+str(line))
 
         rq = conn.getresponse()
-        print(rq.status, rq.reason)
         result = rq.read().decode('utf-8')
 
         return result

@@ -2,7 +2,6 @@ import Connect
 from tkinter import *
 from tkinter.ttk import *
 import xml.etree.ElementTree as ET
-import mouse
 
 class Interface:
     line_list = []
@@ -12,12 +11,18 @@ class Interface:
     def __init__(self):
         #======= 임시로 생성한 리스트 ========
         #==================================
+
         self.tem = Connect.CarrerNetPassing()
         self.window = Tk()
         self.window.resizable(False, False)
         self.window.title("너의 편입은? Fly")
-        self.canvas = Canvas(self.window, bg='white', width=1280, height=720)
+
+        self.bgimage = PhotoImage(file='resource\\bg.png') #<- 이미지를 마음에 드는걸로 바꾸면됨 :)
+        self.canvas = Canvas(self.window, width=1280, height=720)
+        self.canvas.create_image(0,0,anchor=NW, image=self.bgimage)
         self.canvas.pack()
+
+
 
         self.canvas.create_line(300, 0, 300, 730)
         self.canvas.create_line(0, 200, 300, 200)
@@ -56,7 +61,6 @@ class Interface:
         self.canvas.create_text(40, 160, text="학과")
         self.department_select = Combobox(self.window)
         self.department_select['value'] = self.line_list  # 학과를 xml로 로드해서 가져와야함 (리스트로 받는다)
-        print(self.line_list)
         self.department_select.place(x=100, y=150)
 
 #----------------------------------- 여긴 지도임 -------------------------------------------------
@@ -76,11 +80,10 @@ class Interface:
         self.line_list.clear()
         for elt in tree.iter('facilName'):
             temp = [x for x in elt.text.split(',')]
-            print(temp)
             for i in temp:
                 self.line_list.append(i)
 
         self.department_select['value'] = self.line_list
-        print(self.line_list)
+
 
 Interface()
