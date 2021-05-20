@@ -2,6 +2,8 @@ import Connect
 from tkinter import *
 from tkinter.ttk import *
 import xml.etree.ElementTree as ET
+import folium
+import googlemaps
 
 class Interface:
     line_list = []
@@ -9,7 +11,8 @@ class Interface:
         pass
 
     def __init__(self):
-        #======= 임시로 생성한 리스트 ========
+        #======= 구글 지도 api key ========
+        self.__key = "AIzaSyDyJvpUNI8aZh0pPu-SRG-HBdDbxwyg4Tw"
         #==================================
 
         self.tem = Connect.CarrerNetPassing()
@@ -64,6 +67,12 @@ class Interface:
         self.department_select.place(x=100, y=150)
 
 #----------------------------------- 여긴 지도임 -------------------------------------------------
+
+        self.temp_find = u'한국산업기술대학교'
+        self.gmaps = googlemaps.Client(key=self.__key)
+        self.geo = self.gmaps.geocode(self.temp_find, language='ko')
+        print(self.geo)
+
 
         self.gmail_image = PhotoImage(file='resource\\gmail.png')
         self.gmailButton = Button(self.window, image=self.gmail_image, width=10,command=self.sendmail)
