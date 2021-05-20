@@ -2,9 +2,13 @@ import Connect
 from tkinter import *
 from tkinter.ttk import *
 import xml.etree.ElementTree as ET
+import mouse
 
 class Interface:
     line_list = []
+    def sendmail(self):
+        pass
+
     def __init__(self):
         #======= 임시로 생성한 리스트 ========
         #==================================
@@ -19,6 +23,10 @@ class Interface:
         self.canvas.create_line(0, 200, 300, 200)
         self.canvas.create_line(0, 350, 300, 350)
 
+        self.canvas.create_line(500, 0, 500, 730)
+        self.canvas.create_line(300, 150, 500, 150)
+
+        self.canvas.create_line(300, 400, 500, 400)
 
 # ----------------------------------- 여긴 계열 선택 ----------------------------------------------\
         self.brand = ["전체", "인문계열", "사회계열", "교육계열", "공학계열", "자연계열", "의약계열", "예체능계열"]
@@ -50,6 +58,13 @@ class Interface:
         self.department_select['value'] = self.line_list  # 학과를 xml로 로드해서 가져와야함 (리스트로 받는다)
         print(self.line_list)
         self.department_select.place(x=100, y=150)
+
+#----------------------------------- 여긴 지도임 -------------------------------------------------
+
+        self.gmail_image = PhotoImage(file='resource\\gmail.png')
+        self.gmailButton = Button(self.window, image=self.gmail_image, width=10,command=self.sendmail)
+        self.gmailButton.place(x=1225, y=0)
+
 
         self.window.mainloop()
 
