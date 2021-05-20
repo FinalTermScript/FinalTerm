@@ -15,6 +15,11 @@ class Interface:
         self.canvas = Canvas(self.window, bg='white', width=1280, height=720)
         self.canvas.pack()
 
+        self.canvas.create_line(300, 0, 300, 730)
+        self.canvas.create_line(0, 200, 300, 200)
+        self.canvas.create_line(0, 350, 300, 350)
+
+
 # ----------------------------------- 여긴 계열 선택 ----------------------------------------------\
         self.brand = ["전체", "인문계열", "사회계열", "교육계열", "공학계열", "자연계열", "의약계열", "예체능계열"]
         self.str1 = StringVar()
@@ -63,5 +68,4 @@ class Interface:
         self.department_select['value'] = self.line_list
         print(self.line_list)
 
-Connect.CarrerNetPassing()
 Interface()
