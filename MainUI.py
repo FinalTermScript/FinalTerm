@@ -151,6 +151,7 @@ class Interface():
         curr_line=self.line_select['value'][self.line_select.current()]
         curr_major=self.major_select['value'][self.major_select.current()]
         curr_area=self.area_select['value'][self.area_select.current()]
+        self.college_list.clear()
         self.college_list = self.tem.getUniversiryInfo(curr_line, curr_major, curr_area)
         k = self.college_select.size()
         for i in range(k):
@@ -164,30 +165,34 @@ class Interface():
         alturaplus = 640
         final = Image.new("RGB", (largura, alturaplus))
 
-        gmaps = googlemaps.Client(key=self.__key)
-        geocode_result = gmaps.geocode(self.college_list[index], language='ko')
-        lat = geocode_result[0]['geometry']['location']['lat']
-        lng = geocode_result[0]['geometry']['location']['lng']
+        self.gmaps = googlemaps.Client(key=self.__key)
+        geocode_result = self.gmaps.geocode(str(self.college_list[index]), language='ko')
 
-        urlparams = urllib.parse.urlencode({'center': self.college_list[index],
+        if len(geocode_result) != 0:
+            lat = geocode_result[0]['geometry']['location']['lat']
+            lng = geocode_result[0]['geometry']['location']['lng']
+
+            urlparams = urllib.parse.urlencode({'center': self.college_list[index],
                                             'zoom': '16',
                                             'size': '%dx%d' % (1280, 1280),
                                             'maptype': 'ROADMAP',
                                             'markers': 'color:blue|label:S|' + str(lat) + "," + str(lng),
                                             'key': self.__key})
-        url = 'https://maps.googleapis.com/maps/api/staticmap?' + urlparams
+            url = 'https://maps.googleapis.com/maps/api/staticmap?' + urlparams
 
-        r = requests.get(url)
-        im = Image.open(BytesIO(r.content))
-        final.paste(im)
-        final.save("map.png", "png")
+            r = requests.get(url)
+            im = Image.open(BytesIO(r.content))
+            final.paste(im)
+            final.save("map.png", "png")
 
-        image1 = Image.open('map.png')
-        image1 = image1.resize((780, 720))
-        image1.save("map.png", "png")
-        self.mapdata = PhotoImage(file='map.png')
-        self.map_canvas.delete('map')
-        self.map_canvas.create_image(0, 0, anchor=NW, image=self.mapdata, tags='map')
-        self.map_canvas.place(x=500, y=0)
+            image1 = Image.open('map.png')
+            image1 = image1.resize((780, 720))
+            image1.save("map.png", "png")
+            self.mapdata = PhotoImage(file='map.png')
+            self.map_canvas.delete('map')
+            self.map_canvas.create_image(0, 0, anchor=NW, image=self.mapdata, tags='map')
+            self.map_canvas.place(x=500, y=0)
+        else:
+            pass
 
 Interface()
