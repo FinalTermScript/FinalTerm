@@ -107,7 +107,7 @@ class Interface():
         self.mapdata = PhotoImage(file='map.png')
 
         self.map_canvas = Canvas(self.window, width=780, height=720)
-        self.map_canvas.create_image(0, 0, anchor=NW, image=self.mapdata)
+        self.map_canvas.create_image(0, 0, anchor=NW, image=self.mapdata, tags='map')
         self.map_canvas.place(x=500, y=0)
 
 
@@ -135,8 +135,8 @@ class Interface():
 
     def click_item(self, event):
         selectedItem = self.college_select.curselection()
-        print(selectedItem[0])
-        self.showMap(selectedItem[0])
+        if len(selectedItem) != 0:
+            self.showMap(selectedItem[0])
 
 
 
@@ -161,6 +161,10 @@ class Interface():
         print("curr_area: ", curr_area)
         self.college_list = self.tem.getUniversiryInfo(curr_line, curr_major, curr_area)
         print(self.college_list)
+        k = self.college_select.size()
+        for i in range(k):
+            self.college_select.delete(i)
+
         for i in range(len(self.college_list)):
             self.college_select.insert(i, self.college_list[i])
 
@@ -190,7 +194,8 @@ class Interface():
         image1 = image1.resize((780, 720))
         image1.save("map.png", "png")
         self.mapdata = PhotoImage(file='map.png')
-        self.map_canvas.create_image(0, 0, anchor=NW, image=self.mapdata)
+        self.map_canvas.delete('map')
+        self.map_canvas.create_image(0, 0, anchor=NW, image=self.mapdata, tags='map')
         self.map_canvas.place(x=500, y=0)
 
 Interface()
