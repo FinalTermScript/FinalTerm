@@ -52,10 +52,10 @@ class Interface:
 
 #----------------------------------- 여긴 OO도 선택지역 ----------------------------------------------
         self.canvas.create_text(40, 120, text="지역-도")
-        self.region_select = Combobox(self.window)
-        self.region_select['value'] = ("서울특별시", "인천광역시", "부산광역시", "대전광역시", "대구광역시", "광주광역시", "울산광역시", "경기도",
+        self.area_select = Combobox(self.window)
+        self.area_select['value'] = ("서울특별시", "인천광역시", "부산광역시", "대전광역시", "대구광역시", "광주광역시", "울산광역시", "경기도",
                                        "충청북도", "충청남도", "경상북도", "경상남도", "강원도", "전라북도", "전라남도", "제주도")
-        self.region_select.place(x=100, y=110)
+        self.area_select.place(x=100, y=110)
 
 #----------------------------------- 여긴 OO시 선택지역 ---------------------------------------------
         self.canvas.create_text(40, 160, text="지역-시")
@@ -84,7 +84,7 @@ class Interface:
 
         # 계열, 학과 탐색 예시 코드
         # 계열 및 학과가 완벽히 일치해야 검색이 가능합니다
-        self.tem.getUniversiryInfo('예체능계열','광고디자인과',"제주특별자치도")
+        #self.tem.getUniversiryInfo('예체능계열','광고디자인과',"제주특별자치도")
 
         self.window.mainloop()
 
@@ -103,7 +103,14 @@ class Interface:
         self.major_select['value'] = self.line_list
 
     def showResult(self):
-        pass
+        curr_line=self.line_select['value'][self.line_select.current()]
+        curr_major=self.major_select['value'][self.major_select.current()]
+        curr_area=self.area_select['value'][self.area_select.current()]
+        print("curr_line: ",curr_line)
+        print("curr_major: ", curr_major)
+        print("curr_area: ", curr_area)
+        self.tem.getUniversiryInfo(curr_line, curr_major, curr_area)
+
 
 
 Interface()

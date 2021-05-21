@@ -35,7 +35,7 @@ class CarrerNetPassing:
             conn.request("GET", URL)
             rq = conn.getresponse()
             strXml = rq.read().decode('utf-8')
-            # print(strXml)
+            #print(strXml)
 
             major_seq_list = []
             tree = ET.ElementTree(ET.fromstring(strXml))
