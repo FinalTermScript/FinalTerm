@@ -11,6 +11,7 @@ from PIL import Image
 from io import BytesIO
 
 
+
 class Interface():
     line_list = []
     college_list = []
@@ -74,12 +75,6 @@ class Interface():
 
 
 #----------------------------------- 여긴 지도임 -------------------------------------------------
-
-        self.temp_find = u'한국산업기술대학교'
-        self.gmaps = googlemaps.Client(key=self.__key)
-        self.geo = self.gmaps.geocode(self.temp_find, language='ko')
-        seoul_map = folium.Map(location=[37.55, 126.98], tiles='Stamen Terrain', zoom_start=12)
-        print(self.geo)
 
         # 지도 이미지 받아오게 하는 부분임....
         largura = 640
@@ -156,11 +151,7 @@ class Interface():
         curr_line=self.line_select['value'][self.line_select.current()]
         curr_major=self.major_select['value'][self.major_select.current()]
         curr_area=self.area_select['value'][self.area_select.current()]
-        print("curr_line: ",curr_line)
-        print("curr_major: ", curr_major)
-        print("curr_area: ", curr_area)
         self.college_list = self.tem.getUniversiryInfo(curr_line, curr_major, curr_area)
-        print(self.college_list)
         k = self.college_select.size()
         for i in range(k):
             self.college_select.delete(i)
@@ -169,19 +160,20 @@ class Interface():
             self.college_select.insert(i, self.college_list[i])
 
     def showMap(self, index):
-        print(index)
         largura = 640
         alturaplus = 640
         final = Image.new("RGB", (largura, alturaplus))
-        print(self.college_list[index])
 
-        # 마지막 markers 만 표시됨
-        # 세개의 marker 모두 표시됨.
+        gmaps = googlemaps.Client(key=self.__key)
+        geocode_result = gmaps.geocode(self.college_list[index], language='ko')
+        lat = geocode_result[0]['geometry']['location']['lat']
+        lng = geocode_result[0]['geometry']['location']['lng']
+
         urlparams = urllib.parse.urlencode({'center': self.college_list[index],
                                             'zoom': '16',
                                             'size': '%dx%d' % (1280, 1280),
                                             'maptype': 'ROADMAP',
-                                            'markers': 'color:blue|label:S|' + '37.3402849,126.7335076',
+                                            'markers': 'color:blue|label:S|' + str(lat) + "," + str(lng),
                                             'key': self.__key})
         url = 'https://maps.googleapis.com/maps/api/staticmap?' + urlparams
 

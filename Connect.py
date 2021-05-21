@@ -51,9 +51,6 @@ class CarrerNetPassing:
                         continue
                     major_seq = university.find("majorSeq").text
                     major_seq_list.append(major_seq)
-                    print(major)
-                    print("major_seq: ", major_seq)
-
 
 
             # 탐색한 학과코드로 재요청
@@ -69,15 +66,8 @@ class CarrerNetPassing:
                         rst_university_name_list.append([j.find("schoolName").text, j.find("campus_nm").text])
 
             for i in rst_university_list:
-                print()
-                print(i.find("area").text)
-                print(i.find("schoolURL").text)
-                print(i.find("campus_nm").text)
-                print(i.find("schoolName").text)
-                print()
                 result.append(i.find("schoolName").text)
 
-        print(result)
         return result
 
 
