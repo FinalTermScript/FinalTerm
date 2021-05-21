@@ -58,6 +58,7 @@ class CarrerNetPassing:
 
             # 탐색한 학과코드로 재요청
             rst_university_name_list = []
+            result = []
             for i in major_seq_list:
                 for j in self.getUniversiryInfoByMajorSeq(i):
                     # 학교가 중복으로 나올 수 있으므로 학교 이름으로 중복 방지 ( 타 캠퍼스는 다른 학교로 취급)
@@ -74,7 +75,10 @@ class CarrerNetPassing:
                 print(i.find("campus_nm").text)
                 print(i.find("schoolName").text)
                 print()
+                result.append(i.find("schoolName").text)
 
+        print(result)
+        return result
 
 
 
@@ -99,11 +103,6 @@ class CarrerNetPassing:
                 #print(university.find("schoolName").text)
 
         return rst_university_list  # Element의 list를 return
-
-
-
-
-
 
 
 

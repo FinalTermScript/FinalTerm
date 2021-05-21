@@ -13,6 +13,7 @@ from io import BytesIO
 
 class Interface():
     line_list = []
+    college_list = []
     #country_list = []
     def sendmail(self):
         pass
@@ -53,7 +54,6 @@ class Interface():
 # ----------------------------------- 여긴 학과 선택 ----------------------------------------------
         self.canvas.create_text(40, 80, text="학과")
         self.str2 = StringVar()
-        self.str2.trace('w', self.showMap)
         self.major_select = Combobox(self.window, state='readonly', textvariable=self.str2, value=self.line_list)
         self.major_select['value'] = self.line_list  # 학과를 xml로 로드해서 가져와야함 (리스트로 받는다)
         self.major_select.place(x=100, y=70)
@@ -106,7 +106,7 @@ class Interface():
         image1.save("map.png", "png")
         self.mapdata = PhotoImage(file='map.png')
 
-        self.map_canvas = Canvas(self.window, width=780, height=720, tags='map')
+        self.map_canvas = Canvas(self.window, width=780, height=720)
         self.map_canvas.create_image(0, 0, anchor=NW, image=self.mapdata)
         self.map_canvas.place(x=500, y=0)
 
@@ -117,7 +117,7 @@ class Interface():
         self.gmailButton = Button(self.window, image=self.gmail_image, width=10,command=self.sendmail)
         self.gmailButton.place(x=1225, y=0)
 
-# ----------------------------------- 여긴 지도임 -------------------------------------------------
+# ----------------------------------- 여긴 학과가 있는 대학 검색임 -------------------------------------------------
 
         self.show_resultButton=Button(self.window,text='검색', width=10, command=self.showResult)
         self.show_resultButton.place(x=180, y=200)
@@ -126,7 +126,17 @@ class Interface():
         # 계열 및 학과가 완벽히 일치해야 검색이 가능합니다
         #self.tem.getUniversiryInfo('예체능계열','광고디자인과',"제주특별자치도")
 
+# ----------------------------------- 여긴 대학교 선택 -------------------------------------------------
+        self.college_select = Listbox(self.window, selectmode='extended')
+        self.college_select.bind('<<ListboxSelect>>', self.click_item)
+        self.college_select.place(x=20, y=270, width=260, height=430)
+
         self.window.mainloop()
+
+    def click_item(self, event):
+        selectedItem = self.college_select.curselection()
+        print(selectedItem[0])
+        self.showMap(selectedItem[0])
 
 
 
@@ -149,17 +159,21 @@ class Interface():
         print("curr_line: ",curr_line)
         print("curr_major: ", curr_major)
         print("curr_area: ", curr_area)
-        self.tem.getUniversiryInfo(curr_line, curr_major, curr_area)
+        self.college_list = self.tem.getUniversiryInfo(curr_line, curr_major, curr_area)
+        print(self.college_list)
+        for i in range(len(self.college_list)):
+            self.college_select.insert(i, self.college_list[i])
 
-
-    def showMap(self, index, value, op):
+    def showMap(self, index):
+        print(index)
         largura = 640
         alturaplus = 640
         final = Image.new("RGB", (largura, alturaplus))
+        print(self.college_list[index])
 
         # 마지막 markers 만 표시됨
         # 세개의 marker 모두 표시됨.
-        urlparams = urllib.parse.urlencode({'center': '한국산업기술대학교',
+        urlparams = urllib.parse.urlencode({'center': self.college_list[index],
                                             'zoom': '16',
                                             'size': '%dx%d' % (1280, 1280),
                                             'maptype': 'ROADMAP',
@@ -176,5 +190,7 @@ class Interface():
         image1 = image1.resize((780, 720))
         image1.save("map.png", "png")
         self.mapdata = PhotoImage(file='map.png')
+        self.map_canvas.create_image(0, 0, anchor=NW, image=self.mapdata)
+        self.map_canvas.place(x=500, y=0)
 
 Interface()
