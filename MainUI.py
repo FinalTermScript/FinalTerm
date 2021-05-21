@@ -5,7 +5,13 @@ import xml.etree.ElementTree as ET
 import folium
 import googlemaps
 
-class Interface:
+import urllib.request
+import requests
+from PIL import Image
+from io import BytesIO
+
+
+class Interface():
     line_list = []
     #country_list = []
     def sendmail(self):
@@ -46,7 +52,9 @@ class Interface:
 
 # ----------------------------------- 여긴 학과 선택 ----------------------------------------------
         self.canvas.create_text(40, 80, text="학과")
-        self.major_select = Combobox(self.window)
+        self.str2 = StringVar()
+        self.str2.trace('w', self.showMap)
+        self.major_select = Combobox(self.window, state='readonly', textvariable=self.str2, value=self.line_list)
         self.major_select['value'] = self.line_list  # 학과를 xml로 로드해서 가져와야함 (리스트로 받는다)
         self.major_select.place(x=100, y=70)
 
@@ -70,8 +78,40 @@ class Interface:
         self.temp_find = u'한국산업기술대학교'
         self.gmaps = googlemaps.Client(key=self.__key)
         self.geo = self.gmaps.geocode(self.temp_find, language='ko')
+        seoul_map = folium.Map(location=[37.55, 126.98], tiles='Stamen Terrain', zoom_start=12)
         print(self.geo)
 
+        # 지도 이미지 받아오게 하는 부분임....
+        largura = 640
+        alturaplus = 640
+        final = Image.new("RGB", (largura, alturaplus))
+
+        # 마지막 markers 만 표시됨
+        # 세개의 marker 모두 표시됨.
+        urlparams = urllib.parse.urlencode({'center': '한국산업기술대학교',
+                                            'zoom': '16',
+                                            'size': '%dx%d' % (1280, 1280),
+                                            'maptype': 'ROADMAP',
+                                            'markers': 'color:blue|label:S|37.3402849,126.7335076',
+                                            'key': self.__key})
+        url = 'https://maps.googleapis.com/maps/api/staticmap?' + urlparams
+
+        r = requests.get(url)
+        im = Image.open(BytesIO(r.content))
+        final.paste(im)
+        final.save("map.png", "png")
+
+        image1 = Image.open('map.png')
+        image1 = image1.resize((780,720))
+        image1.save("map.png", "png")
+        self.mapdata = PhotoImage(file='map.png')
+
+        self.map_canvas = Canvas(self.window, width=780, height=720, tags='map')
+        self.map_canvas.create_image(0, 0, anchor=NW, image=self.mapdata)
+        self.map_canvas.place(x=500, y=0)
+
+
+#----------------------------------- 이메일 버튼 -------------------------------------------------
 
         self.gmail_image = PhotoImage(file='resource\\gmail.png')
         self.gmailButton = Button(self.window, image=self.gmail_image, width=10,command=self.sendmail)
@@ -112,5 +152,29 @@ class Interface:
         self.tem.getUniversiryInfo(curr_line, curr_major, curr_area)
 
 
+    def showMap(self, index, value, op):
+        largura = 640
+        alturaplus = 640
+        final = Image.new("RGB", (largura, alturaplus))
+
+        # 마지막 markers 만 표시됨
+        # 세개의 marker 모두 표시됨.
+        urlparams = urllib.parse.urlencode({'center': '한국산업기술대학교',
+                                            'zoom': '16',
+                                            'size': '%dx%d' % (1280, 1280),
+                                            'maptype': 'ROADMAP',
+                                            'markers': 'color:blue|label:S|' + '37.3402849,126.7335076',
+                                            'key': self.__key})
+        url = 'https://maps.googleapis.com/maps/api/staticmap?' + urlparams
+
+        r = requests.get(url)
+        im = Image.open(BytesIO(r.content))
+        final.paste(im)
+        final.save("map.png", "png")
+
+        image1 = Image.open('map.png')
+        image1 = image1.resize((780, 720))
+        image1.save("map.png", "png")
+        self.mapdata = PhotoImage(file='map.png')
 
 Interface()
