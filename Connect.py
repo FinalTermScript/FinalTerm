@@ -35,6 +35,7 @@ class CarrerNetPassing:
         strXml = rq.read().decode('utf-8')
         #print(strXml)
 
+        # 학과 검색시 ( 계열, 지역 상관없이 무조건 )
         if major_to_find != '':
             # 학과가 해당하는 학과코드를 탐색
             # (한 학과가 두 개의 학과코드에 포함되어 있는 경우가 있음)
@@ -54,16 +55,13 @@ class CarrerNetPassing:
             rst_university_name_list=[]
             for i in major_seq_list:
                 for j in self.getUniversiryInfoByMajorSeq(i):
-                    if j.find("schoolName").text not in rst_university_name_list: #학교가 중복으로 나올 수 있으므로 학교 이름으로 중복 방지
+                    # 학교가 중복으로 나올 수 있으므로 학교 이름으로 중복 방지 ( 타 캠퍼스는 다른 학교로 취급)
+                    if [j.find("schoolName").text, j.find("campus_nm").text]  not in rst_university_name_list:
                         rst_university_list.append(j)
-                        rst_university_name_list.append(j.find("schoolName").text)
-
+                        rst_university_name_list.append([j.find("schoolName").text, j.find("campus_nm").text])
 
             for i in rst_university_list:
                 print(i.find("schoolName").text)
-
-
-
 
 
     def getUniversiryInfoByMajorSeq(self, major_seq):  #getUniversiryInfo함수 내에서만 사용  # int로 매개변수 전달
