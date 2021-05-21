@@ -84,7 +84,7 @@ class Interface:
 
         # 계열, 학과 탐색 예시 코드
         # 계열 및 학과가 완벽히 일치해야 검색이 가능합니다
-        self.tem.getUniversiryInfo('예체능계열','광고디자인과',0)
+        self.tem.getUniversiryInfo('예체능계열','광고디자인과',"제주특별자치도")
 
         self.window.mainloop()
 
