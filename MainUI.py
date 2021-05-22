@@ -60,11 +60,12 @@ class Interface:
         self.major_select.place(x=100, y=70)
 
 #----------------------------------- 여긴 OO도 선택지역 ----------------------------------------------
-        self.canvas.create_text(40, 120, text="지역-도",font=self.temp_font)
+        self.canvas.create_text(40, 120, text="지역",font=self.temp_font)
         self.area_select = Combobox(self.window)
         self.area_select['value'] = ("서울특별시", "인천광역시", "부산광역시", "대전광역시", "대구광역시", "광주광역시", "울산광역시", "경기도",
                                        "충청북도", "충청남도", "경상북도", "경상남도", "강원도", "전라북도", "전라남도", "제주도")
         self.area_select.place(x=100, y=110)
+
 
 # ----------------------------------- 여긴 학과가 있는 대학 검색임 -------------------------------------------------
 

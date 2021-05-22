@@ -73,9 +73,7 @@ class CarrerNetPassing:
                                         j.find("area").text, j.find("schoolURL").text))
                     rst_university_name_list.append([j.find("schoolName").text, j.find("campus_nm").text])
 
-
-        #rst_university_list.sort(key=lambda x: (x.find("schoolName").text, x))
-
+        rst_university_list.sort(key=lambda x: (x.getSchoolName(), x))
 
         return rst_university_list # type University  list
 
