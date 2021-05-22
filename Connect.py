@@ -16,10 +16,10 @@ class CarrerNetPassing:
         if (line_to_find == '') and (major_to_find != ''):  # 계열 미선택시 학과 선택 불가능
             pass
         else:
-            i_line_to_find = 0
             if line_to_find == '':
                 pass
             else:
+                i_line_to_find = 0
                 if line_to_find == '인문계열':
                     i_line_to_find = 100391
                 elif line_to_find == '사회계열':
@@ -39,36 +39,39 @@ class CarrerNetPassing:
         conn.request("GET", URL)
         rq = conn.getresponse()
         strXml = rq.read().decode('utf-8')
-        #print(strXml)
+        # print(strXml)
 
-        if major_to_find != '':
-            # 학과가 해당하는 학과코드를 탐색
-            # (한 학과가 두 개의 학과코드에 포함되어 있는 경우가 있음)
-            tree = ET.ElementTree(ET.fromstring(strXml))
-            universityElements = tree.iter("content")  # return list type
-            major_seq_list=[]
-            for university in universityElements:
-                major_list = university.find("facilName")
-                for major in major_list.text.split(','):
-                    if major == major_to_find:
-                        major_seq=university.find("majorSeq").text
-                        major_seq_list.append(major_seq)
-                        print(major)
-                        print("major_seq: ",major_seq)
+        major_seq_list = []
+        tree = ET.ElementTree(ET.fromstring(strXml))
+        universityElements = tree.iter("content")  # return list type
+        # 학과 검색시 ( 계열, 지역 상관없이 무조건 )
 
-            # 탐색한 학과코드로 재요청
+        # 학과가 해당하는 학과코드를 탐색
+        # (한 학과가 두 개의 학과코드에 포함되어 있는 경우가 있음)
+        for university in universityElements:
+            major_list = university.find("facilName")
+            for major in major_list.text.split(','):
+                if (major_to_find != '') and (major != major_to_find):
+                    continue
+                major_seq = university.find("majorSeq").text
+                major_seq_list.append(major_seq)
+                print(major_seq)
+                break
 
-            rst_university_name_list = []
-            #result_college_name = []
-            #result_campus_name = []
-            for i in major_seq_list:
-                for j in self.getUniversiryInfoByMajorSeq(i):
-                    # 학교가 중복으로 나올 수 있으므로 학교 이름으로 중복 방지 ( 타 캠퍼스는 다른 학교로 취급)
-                    if [j.find("schoolName").text, j.find("campus_nm").text] not in rst_university_name_list:
-                        if (region_to_find != '')and (j.find('area').text != region_to_find):  # 지역 검색시
-                            continue
-                        rst_university_list.append(Univ.University(j.find("schoolName").text,j.find("campus_nm").text,j.find("majorName").text,j.find("area").text,j.find("schoolURL").text))
-                        rst_university_name_list.append([j.find("schoolName").text, j.find("campus_nm").text])
+        # 탐색한 학과코드로 재요청
+        rst_university_name_list = []
+        # result_college_name = []
+        # result_campus_name = []
+        for i in major_seq_list:
+            for j in self.getUniversiryInfoByMajorSeq(i):
+                # 학교가 중복으로 나올 수 있으므로 학교 이름으로 중복 방지 ( 타 캠퍼스는 다른 학교로 취급)
+                if [j.find("schoolName").text, j.find("campus_nm").text] not in rst_university_name_list:
+                    if (region_to_find != '') and (j.find('area').text != region_to_find):  # 지역 검색시
+                        continue
+                    rst_university_list.append(
+                        Univ.University(j.find("schoolName").text, j.find("campus_nm").text, j.find("majorName").text,
+                                        j.find("area").text, j.find("schoolURL").text))
+                    rst_university_name_list.append([j.find("schoolName").text, j.find("campus_nm").text])
 
 
         #rst_university_list.sort(key=lambda x: (x.find("schoolName").text, x))
