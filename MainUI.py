@@ -20,7 +20,7 @@ from io import BytesIO
 class Interface:
     line_list = []
     #country_list = []
-    rect = [0, 0, 640, 720]
+    rect = [0, 0, 780, 720]
     def sendmail(self):
         pass
 
@@ -34,7 +34,7 @@ class Interface:
         self.window.resizable(False, False)
         self.window.title("너의 편입은? Fly")
 
-        self.window.geometry("1920x720")
+        self.window.geometry("1280x720")
         self.bgimage = PhotoImage(file='resource\\bg.png') #<- 이미지를 마음에 드는걸로 바꾸면됨 :)
         self.canvas = Canvas(self.window, width=1280, height=720)
         self.canvas.create_image(0,0,anchor=NW, image=self.bgimage)
@@ -93,33 +93,11 @@ class Interface:
 #----------------------------------- 여긴 지도임 -------------------------------------------------
 
         # 지도 이미지 받아오게 하는 부분임....
-        largura = 640
-        alturaplus = 640
-        final = Image.new("RGB", (largura, alturaplus))
-
-        # 마지막 markers 만 표시됨
-        # 세개의 marker 모두 표시됨.
-        urlparams = urllib.parse.urlencode({'center': '한국산업기술대학교',
-                                            'zoom': '16',
-                                            'size': '%dx%d' % (1280, 1280),
-                                            'maptype': 'ROADMAP',
-                                            'markers': 'color:blue|label:S|37.3402849,126.7335076',
-                                            'key': self.__key})
-        url = 'https://maps.googleapis.com/maps/api/staticmap?' + urlparams
-
-        r = requests.get(url)
-        im = Image.open(BytesIO(r.content))
-        final.paste(im)
-        final.save("map.png", "png")
-
-        image1 = Image.open('map.png')
-        image1 = image1.resize((780,720))
-        image1.save("map.png", "png")
-        self.mapdata = PhotoImage(file='map.png')
-
-        self.map_canvas = Canvas(self.window, width=780, height=720)
-        self.map_canvas.create_image(0, 0, anchor=NW, image=self.mapdata, tags='map')
-        self.map_canvas.place(x=500, y=0)
+        url = "https://www.google.co.kr/maps/@37.053745,125.6553969,5z?hl=ko"
+        self.map_frame = tk.Frame(self.window, bg='blue', width=780, height=720)
+        self.map_frame.place(x=500, y=0)
+        self.thread = threading.Thread(target=self.test_thread, args=(self.map_frame,url))
+        self.thread.start()
 
 
 #----------------------------------- 이메일 버튼 -------------------------------------------------
@@ -136,11 +114,6 @@ class Interface:
         self.canvas.create_line(240, 150, 500, 150)
 
         self.canvas.create_line(240, 400, 500, 400)
-# ----------------------------------- 웹브라우저 -------------------------------------------------
-        self.web_frame = tk.Frame(self.window, bg='blue', width=640, height=720)
-        self.web_frame.pack(side='right')
-        self.thread = threading.Thread(target=self.test_thread, args=(self.web_frame,))
-        self.thread.start()
 
         self.window.mainloop()
 
@@ -209,33 +182,16 @@ class Interface:
                                             'markers': 'color:blue|label:S|' + str(lat) + "," + str(lng),
                                             'key': self.__key})
             url = 'https://maps.googleapis.com/maps/api/staticmap?' + urlparams
-
-            r = requests.get(url)
-            im = Image.open(BytesIO(r.content))
-            final.paste(im)
-            final.save("map.png", "png")
-
-            image1 = Image.open('map.png')
-            image1 = image1.resize((780, 720))
-            image1.save("map.png", "png")
-            self.mapdata = PhotoImage(file='map.png')
-            self.map_canvas.delete('map')
-            self.map_canvas.create_image(0, 0, anchor=NW, image=self.mapdata, tags='map')
-            self.map_canvas.place(x=500, y=0)
-
-            self.canvas.delete('college_info')
-            self.canvas.create_text(400, 30, text=self.rst_university_list[index].getSchoolName(), tags='college_info')
-            self.canvas.create_text(400, 60, text=self.rst_university_list[index].getCampusName(), tags='college_info')
-            self.canvas.create_text(400, 100, anchor='center', width=180, text=addr, tags='college_info')
+            self.thread.join(url)
         else:
             pass
 
-    def test_thread(self, frame):
+    def test_thread(self, frame, url):
         sys.excepthook = cef.ExceptHook
         self.window_info = cef.WindowInfo(frame.winfo_id())
         self.window_info.SetAsChild(frame.winfo_id(), self.rect)
         cef.Initialize()
-        browser = cef.CreateBrowserSync(self.window_info, url='http://www.google.com')
+        browser = cef.CreateBrowserSync(self.window_info, url=url)
         cef.MessageLoop()
 
 
