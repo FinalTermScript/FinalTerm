@@ -1,5 +1,6 @@
 import http.client
 import xml.etree.ElementTree as ET
+import University as Univ
 
 class CarrerNetPassing:
     # 초기화 : 서버, Key / PlayerID, AccountID는 함수에서 받아옴.
@@ -12,11 +13,11 @@ class CarrerNetPassing:
 
         conn = http.client.HTTPConnection(self.__Server)
         URL = "http://www.career.go.kr/cnet/openapi/getOpenApi?apiKey=fecd1f7f737539284f53c14621096584&svcType=api&svcCode=MAJOR&contentType=xml&gubun=univ_list"
-        if (line_to_find=='' ) and (major_to_find != ''): #계열 미선택시 학과 선택 불가능
+        if (line_to_find == '') and (major_to_find != ''):  # 계열 미선택시 학과 선택 불가능
             pass
         else:
-            i_line_to_find=0
-            if line_to_find=='':
+            i_line_to_find = 0
+            if line_to_find == '':
                 pass
             else:
                 if line_to_find == '인문계열':
@@ -35,50 +36,45 @@ class CarrerNetPassing:
                     i_line_to_find = 100397
                 URL += "&subject=" + str(i_line_to_find)
 
+        conn.request("GET", URL)
+        rq = conn.getresponse()
+        strXml = rq.read().decode('utf-8')
+        #print(strXml)
 
-            conn.request("GET", URL)
-            rq = conn.getresponse()
-            strXml = rq.read().decode('utf-8')
-            #print(strXml)
-
-            major_seq_list = []
-            tree = ET.ElementTree(ET.fromstring(strXml))
-            universityElements = tree.iter("content")  # return list type
-            # 학과 검색시 ( 계열, 지역 상관없이 무조건 )
-
+        if major_to_find != '':
             # 학과가 해당하는 학과코드를 탐색
             # (한 학과가 두 개의 학과코드에 포함되어 있는 경우가 있음)
+            tree = ET.ElementTree(ET.fromstring(strXml))
+            universityElements = tree.iter("content")  # return list type
+            major_seq_list=[]
             for university in universityElements:
                 major_list = university.find("facilName")
                 for major in major_list.text.split(','):
-                    if (major_to_find != '') and (major != major_to_find):
-                        continue
-                    major_seq = university.find("majorSeq").text
-                    major_seq_list.append(major_seq)
-                    print(major_seq)
-                    break
-
+                    if major == major_to_find:
+                        major_seq=university.find("majorSeq").text
+                        major_seq_list.append(major_seq)
+                        print(major)
+                        print("major_seq: ",major_seq)
 
             # 탐색한 학과코드로 재요청
+
             rst_university_name_list = []
-            result_college_name = []
-            result_campus_name = []
+            #result_college_name = []
+            #result_campus_name = []
             for i in major_seq_list:
                 for j in self.getUniversiryInfoByMajorSeq(i):
                     # 학교가 중복으로 나올 수 있으므로 학교 이름으로 중복 방지 ( 타 캠퍼스는 다른 학교로 취급)
                     if [j.find("schoolName").text, j.find("campus_nm").text] not in rst_university_name_list:
                         if (region_to_find != '')and (j.find('area').text != region_to_find):  # 지역 검색시
                             continue
-                        rst_university_list.append(j)
+                        rst_university_list.append(Univ.University(j.find("schoolName").text,j.find("campus_nm").text,j.find("majorName").text,j.find("area").text,j.find("schoolURL").text))
                         rst_university_name_list.append([j.find("schoolName").text, j.find("campus_nm").text])
 
-            for i in rst_university_list:
-                print(i.find("schoolName").text, i.find("campus_nm").text)
-                result_college_name.append(i.find("schoolName").text)
-                result_campus_name.append(i.find("campus_nm").text)
+
+        #rst_university_list.sort(key=lambda x: (x.find("schoolName").text, x))
 
 
-        return result_college_name, result_campus_name
+        return rst_university_list # type University  list
 
 
 
@@ -108,6 +104,11 @@ class CarrerNetPassing:
 
 
 
+
+
+
+
+
     def getUniversiryInfo_line(self, line): # 여기서 계열 선택시 xml 로드함
         conn = http.client.HTTPConnection(self.__Server)
         self.str = "http://www.career.go.kr/cnet/openapi/getOpenApi?apiKey=fecd1f7f737539284f53c14621096584&svcType=api&svcCode=MAJOR&contentType=xml&gubun=univ_list"
@@ -126,6 +127,8 @@ class CarrerNetPassing:
 
     def getRegionInfo(self, region):
         pass
+
+
 
 
 CarrerNetPassing()
