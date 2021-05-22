@@ -1,11 +1,15 @@
 import Connect
 from tkinter import *
+import tkinter as tk
 from tkinter import font
 from tkinter.ttk import *
 import xml.etree.ElementTree as ET
 import folium
 import googlemaps
 
+from cefpython3 import cefpython as cef
+import sys
+import threading
 
 
 import urllib.request
@@ -16,6 +20,7 @@ from io import BytesIO
 class Interface:
     line_list = []
     #country_list = []
+    rect = [0, 0, 640, 720]
     def sendmail(self):
         pass
 
@@ -29,11 +34,11 @@ class Interface:
         self.window.resizable(False, False)
         self.window.title("너의 편입은? Fly")
 
-
+        self.window.geometry("1920x720")
         self.bgimage = PhotoImage(file='resource\\bg.png') #<- 이미지를 마음에 드는걸로 바꾸면됨 :)
         self.canvas = Canvas(self.window, width=1280, height=720)
         self.canvas.create_image(0,0,anchor=NW, image=self.bgimage)
-        self.canvas.pack()
+        self.canvas.place(x=0, y=0)
         self.temp_font=font.Font(size=10, weight='bold', family='italic')
 
 
@@ -131,7 +136,11 @@ class Interface:
         self.canvas.create_line(240, 150, 500, 150)
 
         self.canvas.create_line(240, 400, 500, 400)
-
+# ----------------------------------- 웹브라우저 -------------------------------------------------
+        self.web_frame = tk.Frame(self.window, bg='blue', width=640, height=720)
+        self.web_frame.pack(side='right')
+        self.thread = threading.Thread(target=self.test_thread, args=(self.web_frame,))
+        self.thread.start()
 
         self.window.mainloop()
 
@@ -220,6 +229,14 @@ class Interface:
             self.canvas.create_text(400, 100, anchor='center', width=180, text=addr, tags='college_info')
         else:
             pass
+
+    def test_thread(self, frame):
+        sys.excepthook = cef.ExceptHook
+        self.window_info = cef.WindowInfo(frame.winfo_id())
+        self.window_info.SetAsChild(frame.winfo_id(), self.rect)
+        cef.Initialize()
+        browser = cef.CreateBrowserSync(self.window_info, url='http://www.google.com')
+        cef.MessageLoop()
 
 
 Interface()
