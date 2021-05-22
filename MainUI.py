@@ -82,7 +82,6 @@ class Interface:
         self.show_resultButton=Button(self.window,text='검색', width=10, command=self.showResult)
         self.show_resultButton.place(x=180, y=200)
 
-        self.rst_university_list=[]
         # 계열, 학과 탐색 예시 코드
         # 계열 및 학과가 완벽히 일치해야 검색이 가능합니다
         self.tem.getUniversiryInfo('예체능계열','광고디자인과',0)
@@ -104,73 +103,7 @@ class Interface:
         self.major_select['value'] = self.line_list
 
     def showResult(self):
-<<<<<<< Updated upstream
         pass
 
-=======
-        if self.line_select.current() == -1:
-            curr_line=''
-        else:
-            curr_line=self.line_select['value'][self.line_select.current()]
-        if self.major_select.current() == -1:
-            curr_major=''
-        else:
-            curr_major=self.major_select['value'][self.major_select.current()]
-        if self.area_select.current() == -1:
-            curr_area=''
-        else:
-            curr_area=self.area_select['value'][self.area_select.current()]
-
-        self.rst_university_list.clear()
-        self.rst_university_list=self.tem.getUniversiryInfo(curr_line, curr_major, curr_area)
-        k = self.college_select.size()
-        for i in range(k):
-            self.college_select.delete(i)
-
-        for i in range(len(self.rst_university_list)):
-            self.college_select.insert(i, self.rst_university_list[i].getSchoolName())
-
-
-    def showMap(self, index):
-        largura = 640
-        alturaplus = 640
-        final = Image.new("RGB", (largura, alturaplus))
-
-        self.gmaps = googlemaps.Client(key=self.__key)
-        geocode_result = self.gmaps.geocode(str(self.rst_university_list[index].getSchoolName()), language='ko')
-        print(geocode_result)
-
-        if len(geocode_result) != 0:
-            lat = geocode_result[0]['geometry']['location']['lat']
-            lng = geocode_result[0]['geometry']['location']['lng']
-            addr = geocode_result[0]['formatted_address']
-            urlparams = urllib.parse.urlencode({'center': self.rst_university_list[index].getSchoolName(),
-                                            'zoom': '16',
-                                            'size': '%dx%d' % (1280, 1280),
-                                            'maptype': 'ROADMAP',
-                                            'markers': 'color:blue|label:S|' + str(lat) + "," + str(lng),
-                                            'key': self.__key})
-            url = 'https://maps.googleapis.com/maps/api/staticmap?' + urlparams
-
-            r = requests.get(url)
-            im = Image.open(BytesIO(r.content))
-            final.paste(im)
-            final.save("map.png", "png")
-
-            image1 = Image.open('map.png')
-            image1 = image1.resize((780, 720))
-            image1.save("map.png", "png")
-            self.mapdata = PhotoImage(file='map.png')
-            self.map_canvas.delete('map')
-            self.map_canvas.create_image(0, 0, anchor=NW, image=self.mapdata, tags='map')
-            self.map_canvas.place(x=500, y=0)
-
-            self.canvas.delete('college_info')
-            self.canvas.create_text(400, 30, text=self.rst_university_list[index].getSchoolName(), tags='college_info')
-            self.canvas.create_text(400, 60, text=self.rst_university_list[index].getCampusName(), tags='college_info')
-            self.canvas.create_text(400, 100, anchor='center', width=180, text=addr, tags='college_info')
-        else:
-            pass
->>>>>>> Stashed changes
 
 Interface()
