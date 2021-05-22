@@ -21,6 +21,7 @@ class Interface:
     line_list = []
     #country_list = []
     rect = [0, 0, 780, 720]
+    stop_thread = False
     def sendmail(self):
         pass
 
@@ -98,6 +99,9 @@ class Interface:
         self.map_frame.place(x=500, y=0)
         self.thread = threading.Thread(target=self.test_thread, args=(self.map_frame,url))
         self.thread.start()
+
+
+
 
 
 #----------------------------------- 이메일 버튼 -------------------------------------------------
@@ -182,7 +186,12 @@ class Interface:
                                             'markers': 'color:blue|label:S|' + str(lat) + "," + str(lng),
                                             'key': self.__key})
             url = 'https://maps.googleapis.com/maps/api/staticmap?' + urlparams
-            self.thread.join(url)
+            self.stop_thread = True
+            self.thread.join()
+            self.thread = threading.Thread(target=self.test_thread, args=(self.map_frame, url))
+            self.stop_thread = False
+            self.thread.start()
+
         else:
             pass
 
