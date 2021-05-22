@@ -12,9 +12,11 @@ from io import BytesIO
 
 
 
+
 class Interface():
     line_list = []
     college_list = []
+    campus_name = []
     #country_list = []
     def sendmail(self):
         pass
@@ -152,13 +154,16 @@ class Interface():
         curr_major=self.major_select['value'][self.major_select.current()]
         curr_area=self.area_select['value'][self.area_select.current()]
         self.college_list.clear()
-        self.college_list = self.tem.getUniversiryInfo(curr_line, curr_major, curr_area)
+        self.campus_name.clear()
+        self.college_list, self.campus_name = self.tem.getUniversiryInfo(curr_line, curr_major, curr_area)
         k = self.college_select.size()
         for i in range(k):
             self.college_select.delete(i)
 
         for i in range(len(self.college_list)):
             self.college_select.insert(i, self.college_list[i])
+
+        print(self.campus_name)
 
     def showMap(self, index):
         largura = 640
@@ -167,11 +172,12 @@ class Interface():
 
         self.gmaps = googlemaps.Client(key=self.__key)
         geocode_result = self.gmaps.geocode(str(self.college_list[index]), language='ko')
+        print(geocode_result)
 
         if len(geocode_result) != 0:
             lat = geocode_result[0]['geometry']['location']['lat']
             lng = geocode_result[0]['geometry']['location']['lng']
-
+            addr = geocode_result[0]['formatted_address']
             urlparams = urllib.parse.urlencode({'center': self.college_list[index],
                                             'zoom': '16',
                                             'size': '%dx%d' % (1280, 1280),
@@ -192,6 +198,11 @@ class Interface():
             self.map_canvas.delete('map')
             self.map_canvas.create_image(0, 0, anchor=NW, image=self.mapdata, tags='map')
             self.map_canvas.place(x=500, y=0)
+
+            self.canvas.delete('college_info')
+            self.canvas.create_text(400, 30, text=self.college_list[index], tags='college_info')
+            self.canvas.create_text(400, 60, text=self.campus_name[index], tags='college_info')
+            self.canvas.create_text(400, 100, anchor='center', width=180, text=addr, tags='college_info')
         else:
             pass
 
