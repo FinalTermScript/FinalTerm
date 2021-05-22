@@ -20,7 +20,7 @@ from io import BytesIO
 class Interface:
     line_list = []
     #country_list = []
-    rect = [0, 0, 780, 720]
+    rect = [0, 0, 800, 720]
     stop_thread = False
     def sendmail(self):
         pass
@@ -41,7 +41,6 @@ class Interface:
         self.canvas.create_image(0,0,anchor=NW, image=self.bgimage)
         self.canvas.place(x=0, y=0)
         self.temp_font=font.Font(size=10, weight='bold', family='italic')
-
 
         self.canvas.create_rectangle(0, 0, 240, 720, fill="gray65")
 
@@ -73,14 +72,10 @@ class Interface:
 
 
 # ----------------------------------- 여긴 학과가 있는 대학 검색임 -------------------------------------------------
-        self.show_resultButton = Button(self.window, text='검색', width=10, command=self.showResult)
+        self.show_resultButton = Button(self.window, text='검색', width=10, command=self.showSearchResult)
         self.show_resultButton.place(x=90, y=165)
 
         self.rst_university_list = []
-
-        # 계열, 학과 탐색 예시 코드
-        # 계열 및 학과가 완벽히 일치해야 검색이 가능합니다
-        # self.tem.getUniversiryInfo('예체능계열','광고디자인과',"제주특별자치도")
 
 # ----------------------------------- 여긴 대학교 선택 -------------------------------------------------
         self.canvas.create_rectangle(0, 200, 240, 230, fill="gray90")
@@ -90,19 +85,32 @@ class Interface:
         self.college_select.bind('<<ListboxSelect>>', self.click_item)
         self.college_select.place(x=15, y=245, width=210, height=445)
 
+# -----------------------------------  선택 학교 정보창 -------------------------------------------------
+        #openUniversityInfoWindow 에서 배치
+        self.rst_canvas = Canvas(self.window, width=240, height=720)
+        self.rst_canvas.create_rectangle(0, 0, 240, 720, fill="gray65")
+
+        # rect (0,240) (240,135)에 학교 사진 넣을 예정
+        self.close_univ_rstButton = Button(self.window, text='X',  width=3, command=self.closeUniversityInfoWindow)
+
+        location_image = PhotoImage(file='resource\\location.png')
+        globe_image=PhotoImage(file='resource\\globe.png')
+        self.rst_canvas.create_image(10, 220, anchor=W, image=location_image)
+        self.rst_canvas.create_image(10, 250, anchor=W, image=globe_image)
+
+
+        self.rst_canvas.create_line(0, 0, 0, 730)
+        self.rst_canvas.create_line(0, 135, 240, 135)
+        self.rst_canvas.create_line(240, 0, 240, 730)
 
 #----------------------------------- 여긴 지도임 -------------------------------------------------
 
         # 지도 이미지 받아오게 하는 부분임....
         url = "https://www.google.co.kr/maps/@37.053745,125.6553969,5z?hl=ko"
-        self.map_frame = tk.Frame(self.window, bg='blue', width=780, height=720)
-        self.map_frame.place(x=500, y=0)
+        self.map_frame = tk.Frame(self.window, bg='blue', width=800, height=720)
+        self.map_frame.place(x=480, y=0)
         self.thread = threading.Thread(target=self.test_thread, args=(self.map_frame,url))
         self.thread.start()
-
-
-
-
 
 #----------------------------------- 이메일 버튼 -------------------------------------------------
 
@@ -114,10 +122,8 @@ class Interface:
 
         self.canvas.create_line(0, 200, 240,200)
 
-        self.canvas.create_line(500, 0, 500, 730)
-        self.canvas.create_line(240, 150, 500, 150)
 
-        self.canvas.create_line(240, 400, 500, 400)
+
 
         self.window.mainloop()
 
@@ -126,6 +132,7 @@ class Interface:
     def click_item(self, event):
         selectedItem = self.college_select.curselection()
         if len(selectedItem) != 0:
+            self.openUniversityInfoWindow(selectedItem[0])
             self.showMap(selectedItem[0])
 
 
@@ -141,7 +148,7 @@ class Interface:
 
         self.major_select['value'] = self.line_list
 
-    def showResult(self):
+    def showSearchResult(self):
 
         if self.line_select.current() == -1:
             curr_line=''
@@ -165,6 +172,26 @@ class Interface:
         for i in range(len(self.rst_university_list)):
             self.college_select.insert(i, self.rst_university_list[i].getSchoolName())
 
+        self.closeUniversityInfoWindow()
+
+
+    def openUniversityInfoWindow(self,index):
+        self.rst_canvas.delete('school_name')
+        self.rst_canvas.delete('campus_name')
+        self.rst_canvas.delete('area')
+        self.rst_canvas.delete('school_URL')
+        self.rst_canvas.create_text(35, 160, text=self.rst_university_list[index].getSchoolName(), font=self.temp_font,anchor=W,tags= 'school_name')
+        self.rst_canvas.create_text(35, 190, text=self.rst_university_list[index].getCampusName(), font=self.temp_font,anchor=W,tags= 'campus_name')
+        self.rst_canvas.create_text(35, 220, text=self.rst_university_list[index].getArea(), font=self.temp_font,anchor=W,tags= 'area')
+        self.rst_canvas.create_text(35, 250, text=self.rst_university_list[index].getSchoolURL(), font=self.temp_font,anchor=W,tags= 'school_URL')
+        self.rst_canvas.place(x=240, y=0)
+
+        self.close_univ_rstButton.place(x=450,y=0)
+
+    def closeUniversityInfoWindow(self):
+        self.rst_canvas.place_forget()
+        self.close_univ_rstButton.place_forget()
+
 
     def showMap(self, index):
         largura = 640
@@ -186,11 +213,6 @@ class Interface:
                                             'markers': 'color:blue|label:S|' + str(lat) + "," + str(lng),
                                             'key': self.__key})
             url = 'https://maps.googleapis.com/maps/api/staticmap?' + urlparams
-            self.stop_thread = True
-            self.thread.join()
-            self.thread = threading.Thread(target=self.test_thread, args=(self.map_frame, url))
-            self.stop_thread = False
-            self.thread.start()
 
         else:
             pass
