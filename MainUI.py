@@ -172,11 +172,12 @@ class Interface():
 
         self.gmaps = googlemaps.Client(key=self.__key)
         geocode_result = self.gmaps.geocode(str(self.college_list[index]), language='ko')
+        print(geocode_result)
 
         if len(geocode_result) != 0:
             lat = geocode_result[0]['geometry']['location']['lat']
             lng = geocode_result[0]['geometry']['location']['lng']
-
+            addr = geocode_result[0]['formatted_address']
             urlparams = urllib.parse.urlencode({'center': self.college_list[index],
                                             'zoom': '16',
                                             'size': '%dx%d' % (1280, 1280),
@@ -198,10 +199,9 @@ class Interface():
             self.map_canvas.create_image(0, 0, anchor=NW, image=self.mapdata, tags='map')
             self.map_canvas.place(x=500, y=0)
 
-            self.canvas.delete('college_info')
             self.canvas.create_text(400, 30, text=self.college_list[index], tags='college_info')
             self.canvas.create_text(400, 60, text=self.campus_name[index], tags='college_info')
-            self.canvas.create_text(400, 90, text='주소', tags='college_info')
+            self.canvas_addr.create_text(400, 90, text=addr, tags='college_info')
         else:
             pass
 
