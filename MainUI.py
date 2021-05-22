@@ -29,48 +29,46 @@ class Interface:
         self.window.resizable(False, False)
         self.window.title("너의 편입은? Fly")
 
+
         self.bgimage = PhotoImage(file='resource\\bg.png') #<- 이미지를 마음에 드는걸로 바꾸면됨 :)
         self.canvas = Canvas(self.window, width=1280, height=720)
         self.canvas.create_image(0,0,anchor=NW, image=self.bgimage)
         self.canvas.pack()
-
-
-        self.canvas.create_line(300, 0, 300, 730)
-        self.canvas.create_line(0, 200, 300, 200)
-        #self.canvas.create_line(0, 350, 300, 350)
-
-        self.canvas.create_line(500, 0, 500, 730)
-        self.canvas.create_line(300, 150, 500, 150)
-
-        self.canvas.create_line(300, 400, 500, 400)
-
         self.temp_font=font.Font(size=10, weight='bold', family='italic')
+
+
+        self.canvas.create_rectangle(0, 0, 240, 720, fill="gray65")
+
+        self.canvas.create_rectangle(0, 0, 240, 30, fill="gray90")
+        self.canvas.create_text(120, 15, text="검색 조건", font=self.temp_font)
 # ----------------------------------- 여긴 계열 선택 ----------------------------------------------\
+        self.canvas.create_rectangle(15, 45, 225, 75, fill="gray90", outline='white')
         self.brand = ["전체", "인문계열", "사회계열", "교육계열", "공학계열", "자연계열", "의약계열", "예체능계열"]
         self.str1 = StringVar()
         self.str1.trace('w', self.changeMajor)
-        self.canvas.create_text(40, 40, text="계열",font=self.temp_font)
+        self.canvas.create_text(35, 60, text="계열",font=self.temp_font)
         self.line_select = Combobox(self.window, state='readonly', textvariable=self.str1, values=self.brand)
-        self.line_select.place(x=100, y=30)
+        self.line_select.place(x=55, y=50)
 
 # ----------------------------------- 여긴 학과 선택 ----------------------------------------------
-        self.canvas.create_text(40, 80, text="학과",font=self.temp_font)
+        self.canvas.create_rectangle(15, 85, 225, 115, fill="gray90", outline='white')
+        self.canvas.create_text(35, 100, text="학과",font=self.temp_font)
         self.major_select = Combobox(self.window)
         self.major_select['value'] = self.line_list  # 학과를 xml로 로드해서 가져와야함 (리스트로 받는다)
-        self.major_select.place(x=100, y=70)
+        self.major_select.place(x=55, y=90)
 
 #----------------------------------- 여긴 OO도 선택지역 ----------------------------------------------
-        self.canvas.create_text(40, 120, text="지역",font=self.temp_font)
+        self.canvas.create_rectangle(15, 125, 225, 155, fill="gray90", outline='white')
+        self.canvas.create_text(35, 140, text="지역",font=self.temp_font)
         self.area_select = Combobox(self.window)
         self.area_select['value'] = ("서울특별시", "인천광역시", "부산광역시", "대전광역시", "대구광역시", "광주광역시", "울산광역시", "경기도",
                                        "충청북도", "충청남도", "경상북도", "경상남도", "강원도", "전라북도", "전라남도", "제주도")
-        self.area_select.place(x=100, y=110)
+        self.area_select.place(x=55, y=130)
 
 
 # ----------------------------------- 여긴 학과가 있는 대학 검색임 -------------------------------------------------
-
         self.show_resultButton = Button(self.window, text='검색', width=10, command=self.showResult)
-        self.show_resultButton.place(x=180, y=150)
+        self.show_resultButton.place(x=90, y=165)
 
         self.rst_university_list = []
 
@@ -79,9 +77,12 @@ class Interface:
         # self.tem.getUniversiryInfo('예체능계열','광고디자인과',"제주특별자치도")
 
 # ----------------------------------- 여긴 대학교 선택 -------------------------------------------------
-        self.college_select = Listbox(self.window, selectmode='extended')
+        self.canvas.create_rectangle(0, 200, 240, 230, fill="gray90")
+        self.canvas.create_text(120, 215, text="검색 결과", font=self.temp_font)
+
+        self.college_select = Listbox(self.window, selectmode='extended',bg='gray90')
         self.college_select.bind('<<ListboxSelect>>', self.click_item)
-        self.college_select.place(x=0, y=200, width=300, height=530)
+        self.college_select.place(x=15, y=245, width=210, height=445)
 
 
 #----------------------------------- 여긴 지도임 -------------------------------------------------
@@ -121,6 +122,15 @@ class Interface:
         self.gmail_image = PhotoImage(file='resource\\gmail.png')
         self.gmailButton = Button(self.window, image=self.gmail_image, width=10,command=self.sendmail)
         self.gmailButton.place(x=1225, y=0)
+
+        self.canvas.create_line(240, 0, 240, 730)
+
+        self.canvas.create_line(0, 200, 240,200)
+
+        self.canvas.create_line(500, 0, 500, 730)
+        self.canvas.create_line(240, 150, 500, 150)
+
+        self.canvas.create_line(240, 400, 500, 400)
 
 
         self.window.mainloop()
