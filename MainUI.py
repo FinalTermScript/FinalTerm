@@ -199,9 +199,10 @@ class Interface():
             self.map_canvas.create_image(0, 0, anchor=NW, image=self.mapdata, tags='map')
             self.map_canvas.place(x=500, y=0)
 
+            self.canvas.delete('college_info')
             self.canvas.create_text(400, 30, text=self.college_list[index], tags='college_info')
             self.canvas.create_text(400, 60, text=self.campus_name[index], tags='college_info')
-            self.canvas_addr.create_text(400, 90, text=addr, tags='college_info')
+            self.canvas.create_text(400, 100, anchor='center', width=180, text=addr, tags='college_info')
         else:
             pass
 
