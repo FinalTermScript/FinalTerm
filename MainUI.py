@@ -36,7 +36,7 @@ class Interface:
 
 
         self.canvas.create_line(300, 0, 300, 730)
-        self.canvas.create_line(0, 250, 300, 250)
+        self.canvas.create_line(0, 200, 300, 200)
         #self.canvas.create_line(0, 350, 300, 350)
 
         self.canvas.create_line(500, 0, 500, 730)
@@ -66,12 +66,21 @@ class Interface:
                                        "충청북도", "충청남도", "경상북도", "경상남도", "강원도", "전라북도", "전라남도", "제주도")
         self.area_select.place(x=100, y=110)
 
-#----------------------------------- 여긴 OO시 선택지역 ---------------------------------------------
-        self.canvas.create_text(40, 160, text="지역-시",font=self.temp_font)
-        self.country_select = Combobox(self.window)
-        self.country_select['value'] = None
-        self.country_select.place(x=100, y=150)
+# ----------------------------------- 여긴 학과가 있는 대학 검색임 -------------------------------------------------
 
+        self.show_resultButton = Button(self.window, text='검색', width=10, command=self.showResult)
+        self.show_resultButton.place(x=180, y=150)
+
+        self.rst_university_list = []
+
+        # 계열, 학과 탐색 예시 코드
+        # 계열 및 학과가 완벽히 일치해야 검색이 가능합니다
+        # self.tem.getUniversiryInfo('예체능계열','광고디자인과',"제주특별자치도")
+
+# ----------------------------------- 여긴 대학교 선택 -------------------------------------------------
+        self.college_select = Listbox(self.window, selectmode='extended')
+        self.college_select.bind('<<ListboxSelect>>', self.click_item)
+        self.college_select.place(x=0, y=200, width=300, height=530)
 
 
 #----------------------------------- 여긴 지도임 -------------------------------------------------
@@ -112,21 +121,6 @@ class Interface:
         self.gmailButton = Button(self.window, image=self.gmail_image, width=10,command=self.sendmail)
         self.gmailButton.place(x=1225, y=0)
 
-# ----------------------------------- 여긴 학과가 있는 대학 검색임 -------------------------------------------------
-
-        self.show_resultButton=Button(self.window,text='검색', width=10, command=self.showResult)
-        self.show_resultButton.place(x=180, y=200)
-
-        self.rst_university_list=[]
-
-        # 계열, 학과 탐색 예시 코드
-        # 계열 및 학과가 완벽히 일치해야 검색이 가능합니다
-        #self.tem.getUniversiryInfo('예체능계열','광고디자인과',"제주특별자치도")
-
-# ----------------------------------- 여긴 대학교 선택 -------------------------------------------------
-        self.college_select = Listbox(self.window, selectmode='extended')
-        self.college_select.bind('<<ListboxSelect>>', self.click_item)
-        self.college_select.place(x=0, y=250, width=300, height=480)
 
         self.window.mainloop()
 
