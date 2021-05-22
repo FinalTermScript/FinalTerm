@@ -154,6 +154,7 @@ class Interface():
         curr_major=self.major_select['value'][self.major_select.current()]
         curr_area=self.area_select['value'][self.area_select.current()]
         self.college_list.clear()
+        self.campus_name.clear()
         self.college_list, self.campus_name = self.tem.getUniversiryInfo(curr_line, curr_major, curr_area)
         k = self.college_select.size()
         for i in range(k):
@@ -161,6 +162,8 @@ class Interface():
 
         for i in range(len(self.college_list)):
             self.college_select.insert(i, self.college_list[i])
+
+        print(self.campus_name)
 
     def showMap(self, index):
         largura = 640
@@ -194,6 +197,11 @@ class Interface():
             self.map_canvas.delete('map')
             self.map_canvas.create_image(0, 0, anchor=NW, image=self.mapdata, tags='map')
             self.map_canvas.place(x=500, y=0)
+
+            self.canvas.delete('college_info')
+            self.canvas.create_text(400, 30, text=self.college_list[index], tags='college_info')
+            self.canvas.create_text(400, 60, text=self.campus_name[index], tags='college_info')
+            self.canvas.create_text(400, 90, text='주소', tags='college_info')
         else:
             pass
 
