@@ -16,21 +16,25 @@ class CarrerNetPassing:
             pass
         else:
             i_line_to_find=0
-            if line_to_find=='인문계열':
-                i_line_to_find=100391
-            elif line_to_find=='사회계열':
-                i_line_to_find = 100392
-            elif line_to_find == '교육계열':
-                i_line_to_find = 100393
-            elif line_to_find == '공학계열':
-                i_line_to_find = 100394
-            elif line_to_find == '자연계열':
-                i_line_to_find = 100395
-            elif line_to_find == '의약계열':
-                i_line_to_find = 100396
-            elif line_to_find == '예체능계열':
-                i_line_to_find = 100397
-            URL += "&subject=" + str(i_line_to_find)
+            if line_to_find=='':
+                pass
+            else:
+                if line_to_find == '인문계열':
+                    i_line_to_find = 100391
+                elif line_to_find == '사회계열':
+                    i_line_to_find = 100392
+                elif line_to_find == '교육계열':
+                    i_line_to_find = 100393
+                elif line_to_find == '공학계열':
+                    i_line_to_find = 100394
+                elif line_to_find == '자연계열':
+                    i_line_to_find = 100395
+                elif line_to_find == '의약계열':
+                    i_line_to_find = 100396
+                elif line_to_find == '예체능계열':
+                    i_line_to_find = 100397
+                URL += "&subject=" + str(i_line_to_find)
+
 
             conn.request("GET", URL)
             rq = conn.getresponse()
@@ -51,6 +55,8 @@ class CarrerNetPassing:
                         continue
                     major_seq = university.find("majorSeq").text
                     major_seq_list.append(major_seq)
+                    print(major_seq)
+                    break
 
 
             # 탐색한 학과코드로 재요청
