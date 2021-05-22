@@ -12,9 +12,11 @@ from io import BytesIO
 
 
 
+
 class Interface():
     line_list = []
     college_list = []
+    campus_name = []
     #country_list = []
     def sendmail(self):
         pass
@@ -152,7 +154,7 @@ class Interface():
         curr_major=self.major_select['value'][self.major_select.current()]
         curr_area=self.area_select['value'][self.area_select.current()]
         self.college_list.clear()
-        self.college_list = self.tem.getUniversiryInfo(curr_line, curr_major, curr_area)
+        self.college_list, self.campus_name = self.tem.getUniversiryInfo(curr_line, curr_major, curr_area)
         k = self.college_select.size()
         for i in range(k):
             self.college_select.delete(i)
