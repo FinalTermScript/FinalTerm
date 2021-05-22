@@ -1,5 +1,6 @@
 import Connect
 from tkinter import *
+from tkinter import font
 from tkinter.ttk import *
 import xml.etree.ElementTree as ET
 import folium
@@ -46,30 +47,31 @@ class Interface():
 
         self.canvas.create_line(300, 400, 500, 400)
 
+        self.temp_font=font.Font(size=10,weight='bold', family='Consolas')
 # ----------------------------------- 여긴 계열 선택 ----------------------------------------------\
         self.brand = ["전체", "인문계열", "사회계열", "교육계열", "공학계열", "자연계열", "의약계열", "예체능계열"]
         self.str1 = StringVar()
         self.str1.trace('w', self.changeMajor)
-        self.canvas.create_text(40, 40, text="계열")
+        self.canvas.create_text(40, 40, text="계열",font=self.temp_font)
         self.line_select = Combobox(self.window, state='readonly', textvariable=self.str1, values=self.brand)
         self.line_select.place(x=100, y=30)
 
 # ----------------------------------- 여긴 학과 선택 ----------------------------------------------
-        self.canvas.create_text(40, 80, text="학과")
+        self.canvas.create_text(40, 80, text="학과",font=self.temp_font)
         self.str2 = StringVar()
         self.major_select = Combobox(self.window, state='readonly', textvariable=self.str2, value=self.line_list)
         self.major_select['value'] = self.line_list  # 학과를 xml로 로드해서 가져와야함 (리스트로 받는다)
         self.major_select.place(x=100, y=70)
 
 #----------------------------------- 여긴 OO도 선택지역 ----------------------------------------------
-        self.canvas.create_text(40, 120, text="지역-도")
+        self.canvas.create_text(40, 120, text="지역-도",font=self.temp_font)
         self.area_select = Combobox(self.window)
         self.area_select['value'] = ("서울특별시", "인천광역시", "부산광역시", "대전광역시", "대구광역시", "광주광역시", "울산광역시", "경기도",
                                        "충청북도", "충청남도", "경상북도", "경상남도", "강원도", "전라북도", "전라남도", "제주도")
         self.area_select.place(x=100, y=110)
 
 #----------------------------------- 여긴 OO시 선택지역 ---------------------------------------------
-        self.canvas.create_text(40, 160, text="지역-시")
+        self.canvas.create_text(40, 160, text="지역-시",font=self.temp_font)
         self.country_select = Combobox(self.window)
         self.country_select['value'] = None
         self.country_select.place(x=100, y=150)
@@ -126,7 +128,7 @@ class Interface():
 # ----------------------------------- 여긴 대학교 선택 -------------------------------------------------
         self.college_select = Listbox(self.window, selectmode='extended')
         self.college_select.bind('<<ListboxSelect>>', self.click_item)
-        self.college_select.place(x=20, y=270, width=260, height=430)
+        self.college_select.place(x=0, y=250, width=300, height=480)
 
         self.window.mainloop()
 
@@ -150,9 +152,18 @@ class Interface():
         self.major_select['value'] = self.line_list
 
     def showResult(self):
-        curr_line=self.line_select['value'][self.line_select.current()]
-        curr_major=self.major_select['value'][self.major_select.current()]
-        curr_area=self.area_select['value'][self.area_select.current()]
+        if self.line_select.current() == -1:
+            curr_line=''
+        else:
+            curr_line=self.line_select['value'][self.line_select.current()]
+        if self.major_select.current() == -1:
+            curr_major=''
+        else:
+            curr_major=self.major_select['value'][self.major_select.current()]
+        if self.area_select.current() == -1:
+            curr_area=''
+        else:
+            curr_area=self.area_select['value'][self.area_select.current()]
         self.college_list.clear()
         self.campus_name.clear()
         self.college_list, self.campus_name = self.tem.getUniversiryInfo(curr_line, curr_major, curr_area)
