@@ -52,15 +52,7 @@ class CarrerNetPassing:
                         print("major_seq: ",major_seq)
 
             # 탐색한 학과코드로 재요청
-<<<<<<< Updated upstream
-            rst_university_name_list=[]
-            for i in major_seq_list:
-                for j in self.getUniversiryInfoByMajorSeq(i):
-                    if j.find("schoolName").text not in rst_university_name_list: #학교가 중복으로 나올 수 있으므로 학교 이름으로 중복 방지
-                        rst_university_list.append(j)
-                        rst_university_name_list.append(j.find("schoolName").text)
 
-=======
             rst_university_name_list = []
             #result_college_name = []
             #result_campus_name = []
@@ -73,28 +65,11 @@ class CarrerNetPassing:
                         rst_university_list.append(Univ.University(j.find("schoolName").text,j.find("campus_nm").text,j.find("majorName").text,j.find("area").text,j.find("schoolURL").text))
                         rst_university_name_list.append([j.find("schoolName").text, j.find("campus_nm").text])
 
-            for i in rst_university_list:
-                '''
-                print(i.find("schoolName").text, i.find("campus_nm").text)
-                result_college_name.append(i.find("schoolName").text)
-                result_campus_name.append(i.find("campus_nm").text)
-                print()
-                print(i.find("area").text)
-                print(i.find("schoolURL").text)
-                print(i.find("campus_nm").text)
-                print(i.find("schoolName").text)
-                print()
-                '''
+
         #rst_university_list.sort(key=lambda x: (x.find("schoolName").text, x))
->>>>>>> Stashed changes
 
-            for i in rst_university_list:
-                print(i.find("schoolName").text)
 
-<<<<<<< Updated upstream
-=======
         return rst_university_list # type University  list
->>>>>>> Stashed changes
 
 
 

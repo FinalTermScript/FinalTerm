@@ -1,9 +1,16 @@
 import Connect
 from tkinter import *
+from tkinter import font
 from tkinter.ttk import *
 import xml.etree.ElementTree as ET
 import folium
 import googlemaps
+
+
+import urllib.request
+import requests
+from PIL import Image
+from io import BytesIO
 
 class Interface:
     line_list = []
@@ -52,10 +59,10 @@ class Interface:
 
 #----------------------------------- 여긴 OO도 선택지역 ----------------------------------------------
         self.canvas.create_text(40, 120, text="지역-도")
-        self.region_select = Combobox(self.window)
-        self.region_select['value'] = ("서울특별시", "인천광역시", "부산광역시", "대전광역시", "대구광역시", "광주광역시", "울산광역시", "경기도",
+        self.area_select = Combobox(self.window)
+        self.area_select['value'] = ("서울특별시", "인천광역시", "부산광역시", "대전광역시", "대구광역시", "광주광역시", "울산광역시", "경기도",
                                        "충청북도", "충청남도", "경상북도", "경상남도", "강원도", "전라북도", "전라남도", "제주도")
-        self.region_select.place(x=100, y=110)
+        self.area_select.place(x=100, y=110)
 
 #----------------------------------- 여긴 OO시 선택지역 ---------------------------------------------
         self.canvas.create_text(40, 160, text="지역-시")
@@ -67,28 +74,66 @@ class Interface:
 
 #----------------------------------- 여긴 지도임 -------------------------------------------------
 
-        self.temp_find = u'한국산업기술대학교'
-        self.gmaps = googlemaps.Client(key=self.__key)
-        self.geo = self.gmaps.geocode(self.temp_find, language='ko')
-        print(self.geo)
+        # 지도 이미지 받아오게 하는 부분임....
+        largura = 640
+        alturaplus = 640
+        final = Image.new("RGB", (largura, alturaplus))
 
+        # 마지막 markers 만 표시됨
+        # 세개의 marker 모두 표시됨.
+        urlparams = urllib.parse.urlencode({'center': '한국산업기술대학교',
+                                            'zoom': '16',
+                                            'size': '%dx%d' % (1280, 1280),
+                                            'maptype': 'ROADMAP',
+                                            'markers': 'color:blue|label:S|37.3402849,126.7335076',
+                                            'key': self.__key})
+        url = 'https://maps.googleapis.com/maps/api/staticmap?' + urlparams
+
+        r = requests.get(url)
+        im = Image.open(BytesIO(r.content))
+        final.paste(im)
+        final.save("map.png", "png")
+
+        image1 = Image.open('map.png')
+        image1 = image1.resize((780,720))
+        image1.save("map.png", "png")
+        self.mapdata = PhotoImage(file='map.png')
+
+        self.map_canvas = Canvas(self.window, width=780, height=720)
+        self.map_canvas.create_image(0, 0, anchor=NW, image=self.mapdata, tags='map')
+        self.map_canvas.place(x=500, y=0)
+
+
+#----------------------------------- 이메일 버튼 -------------------------------------------------
 
         self.gmail_image = PhotoImage(file='resource\\gmail.png')
         self.gmailButton = Button(self.window, image=self.gmail_image, width=10,command=self.sendmail)
         self.gmailButton.place(x=1225, y=0)
 
-# ----------------------------------- 여긴 지도임 -------------------------------------------------
+# ----------------------------------- 여긴 학과가 있는 대학 검색임 -------------------------------------------------
 
         self.show_resultButton=Button(self.window,text='검색', width=10, command=self.showResult)
         self.show_resultButton.place(x=180, y=200)
 
         self.rst_university_list=[]
+
         # 계열, 학과 탐색 예시 코드
         # 계열 및 학과가 완벽히 일치해야 검색이 가능합니다
-        self.tem.getUniversiryInfo('예체능계열','광고디자인과',0)
+        #self.tem.getUniversiryInfo('예체능계열','광고디자인과',"제주특별자치도")
+
+# ----------------------------------- 여긴 대학교 선택 -------------------------------------------------
+        self.college_select = Listbox(self.window, selectmode='extended')
+        self.college_select.bind('<<ListboxSelect>>', self.click_item)
+        self.college_select.place(x=0, y=250, width=300, height=480)
 
         self.window.mainloop()
 
+
+
+    def click_item(self, event):
+        selectedItem = self.college_select.curselection()
+        if len(selectedItem) != 0:
+            self.showMap(selectedItem[0])
 
 
     def changeMajor(self, index, value, op):
@@ -104,10 +149,7 @@ class Interface:
         self.major_select['value'] = self.line_list
 
     def showResult(self):
-<<<<<<< Updated upstream
-        pass
 
-=======
         if self.line_select.current() == -1:
             curr_line=''
         else:
@@ -171,6 +213,6 @@ class Interface:
             self.canvas.create_text(400, 100, anchor='center', width=180, text=addr, tags='college_info')
         else:
             pass
->>>>>>> Stashed changes
+
 
 Interface()
