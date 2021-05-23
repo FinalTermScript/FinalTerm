@@ -17,6 +17,10 @@ import requests
 from PIL import Image
 from io import BytesIO
 
+thread = True
+count = 0
+search = False
+urls = 'https://www.naver.com/'
 class Interface:
     line_list = []
     #country_list = []
@@ -26,6 +30,7 @@ class Interface:
         pass
 
     def __init__(self):
+        global search
         #======= 구글 지도 api key ========
         self.__key = "AIzaSyDyJvpUNI8aZh0pPu-SRG-HBdDbxwyg4Tw"
         #==================================
@@ -107,11 +112,12 @@ class Interface:
 
         # 지도 이미지 받아오게 하는 부분임....
         url = "https://www.google.co.kr/maps/@37.053745,125.6553969,5z?hl=ko"
-        self.map_frame = tk.Frame(self.window, bg='blue', width=800, height=720)
+        self.map_frame = tk.Frame(self.window, bg='white', width=800, height=720)
         self.map_frame.place(x=480, y=0)
-        self.thread = threading.Thread(target=self.test_thread, args=(self.map_frame,url))
-        self.thread.start()
 
+        self.thread = threading.Thread(target=self.test_thread, args=(self.map_frame,url))
+        self.thread.setDaemon(True)
+        self.thread.start()
 #----------------------------------- 이메일 버튼 -------------------------------------------------
 
         self.gmail_image = PhotoImage(file='resource\\gmail.png')
@@ -121,7 +127,6 @@ class Interface:
         self.canvas.create_line(240, 0, 240, 730)
 
         self.canvas.create_line(0, 200, 240,200)
-
 
 
 
@@ -194,6 +199,7 @@ class Interface:
 
 
     def showMap(self, index):
+        global thread
         largura = 640
         alturaplus = 640
         final = Image.new("RGB", (largura, alturaplus))
@@ -212,18 +218,28 @@ class Interface:
                                             'maptype': 'ROADMAP',
                                             'markers': 'color:blue|label:S|' + str(lat) + "," + str(lng),
                                             'key': self.__key})
-            url = 'https://maps.googleapis.com/maps/api/staticmap?' + urlparams
+            url = "www.naver.com"
+            thread = False
+            print(self.thread.is_alive())
+            self.thread.join()
+            thread = True
+
+            # 여기까진 잘 종료됨 ㅆ ㅂ
 
         else:
             pass
 
     def test_thread(self, frame, url):
+        global thread, urls
+
         sys.excepthook = cef.ExceptHook
         self.window_info = cef.WindowInfo(frame.winfo_id())
         self.window_info.SetAsChild(frame.winfo_id(), self.rect)
         cef.Initialize()
         browser = cef.CreateBrowserSync(self.window_info, url=url)
-        cef.MessageLoop()
+        while thread:
+            cef.SingleMessageLoop()
 
+        print("잘통과함")
 
 Interface()
