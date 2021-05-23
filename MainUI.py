@@ -1,4 +1,5 @@
 import Connect
+import CrawlImg
 from tkinter import *
 import tkinter as tk
 from tkinter import font
@@ -11,11 +12,13 @@ from cefpython3 import cefpython as cef
 import sys
 import threading
 
-
-import urllib.request
-import requests
 from PIL import Image
 from io import BytesIO
+
+import urllib.request
+
+
+
 
 thread = True
 count = 0
@@ -94,14 +97,15 @@ class Interface:
         #openUniversityInfoWindow 에서 배치
         self.rst_canvas = Canvas(self.window, width=240, height=720)
         self.rst_canvas.create_rectangle(0, 0, 240, 720, fill="gray65")
+        self.rst_canvas.create_rectangle(15, 150, 225, 280, fill="gray90", outline='white')
 
         # rect (0,240) (240,135)에 학교 사진 넣을 예정
         self.close_univ_rstButton = Button(self.window, text='X',  width=3, command=self.closeUniversityInfoWindow)
 
         location_image = PhotoImage(file='resource\\location.png')
         globe_image=PhotoImage(file='resource\\globe.png')
-        self.rst_canvas.create_image(10, 220, anchor=W, image=location_image)
-        self.rst_canvas.create_image(10, 250, anchor=W, image=globe_image)
+        self.rst_canvas.create_image(25, 230, anchor=W, image=location_image)
+        self.rst_canvas.create_image(25, 260, anchor=W, image=globe_image)
 
 
         self.rst_canvas.create_line(0, 0, 0, 730)
@@ -129,7 +133,6 @@ class Interface:
         self.canvas.create_line(0, 200, 240,200)
 
 
-
         self.window.mainloop()
 
 
@@ -137,8 +140,10 @@ class Interface:
     def click_item(self, event):
         selectedItem = self.college_select.curselection()
         if len(selectedItem) != 0:
+            CrawlImg.crawl(self.rst_university_list[selectedItem[0]].getSchoolName())
             self.openUniversityInfoWindow(selectedItem[0])
-            self.showMap(selectedItem[0])
+
+            #self.showMap(selectedItem[0])
 
 
     def changeMajor(self, index, value, op):
@@ -181,17 +186,23 @@ class Interface:
 
 
     def openUniversityInfoWindow(self,index):
+        self.rst_canvas.delete('school_img')
+        self.school_image = PhotoImage(file='resource\\school_img.png')
+        self.rst_canvas.create_image(0, 0, anchor=NW, image=self.school_image, tags='school_img')
+
         self.rst_canvas.delete('school_name')
         self.rst_canvas.delete('campus_name')
         self.rst_canvas.delete('area')
         self.rst_canvas.delete('school_URL')
-        self.rst_canvas.create_text(35, 160, text=self.rst_university_list[index].getSchoolName(), font=self.temp_font,anchor=W,tags= 'school_name')
-        self.rst_canvas.create_text(35, 190, text=self.rst_university_list[index].getCampusName(), font=self.temp_font,anchor=W,tags= 'campus_name')
-        self.rst_canvas.create_text(35, 220, text=self.rst_university_list[index].getArea(), font=self.temp_font,anchor=W,tags= 'area')
-        self.rst_canvas.create_text(35, 250, text=self.rst_university_list[index].getSchoolURL(), font=self.temp_font,anchor=W,tags= 'school_URL')
+        self.rst_canvas.create_text(50, 170, text=self.rst_university_list[index].getSchoolName(), font=self.temp_font,anchor=W,tags= 'school_name')
+        self.rst_canvas.create_text(50, 200, text=self.rst_university_list[index].getCampusName(), font=self.temp_font,anchor=W,tags= 'campus_name')
+        self.rst_canvas.create_text(50, 230, text=self.rst_university_list[index].getArea(), font=self.temp_font,anchor=W,tags= 'area')
+        self.rst_canvas.create_text(50, 260, text=self.rst_university_list[index].getSchoolURL(), font=self.temp_font,anchor=W,tags= 'school_URL')
         self.rst_canvas.place(x=240, y=0)
 
         self.close_univ_rstButton.place(x=450,y=0)
+
+
 
     def closeUniversityInfoWindow(self):
         self.rst_canvas.place_forget()
