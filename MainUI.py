@@ -29,6 +29,7 @@ class Interface:
     #country_list = []
     rect = [0, 0, 800, 720]
     stop_thread = False
+    index = 0
     def sendmail(self):
         pass
 
@@ -155,6 +156,7 @@ class Interface:
             self.openUniversityInfoWindow(selectedItem[0])
             if self.major_select.current()!=-1:
                 self.openUniversityInfoWindow(selectedItem[0])
+                self.index = selectedItem[0]
 
 
             #self.showMap(selectedItem[0])
@@ -274,6 +276,7 @@ class Interface:
         cef.MessageLoop()
 
     def urlLoad(self, event):
-        self.browser.LoadUrl("http://www.kpu.ac.kr")
+        url = "https://www.google.co.kr/maps/place/" + str(self.rst_university_list[self.index].getSchoolName())
+        self.browser.LoadUrl(url)
 
 Interface()
