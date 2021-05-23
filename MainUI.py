@@ -95,22 +95,31 @@ class Interface:
 
 # -----------------------------------  선택 학교 정보창 -------------------------------------------------
         #openUniversityInfoWindow 에서 배치
-        self.rst_canvas = Canvas(self.window, width=240, height=720)
-        self.rst_canvas.create_rectangle(0, 0, 240, 720, fill="gray65")
-        self.rst_canvas.create_rectangle(15, 150, 225, 280, fill="gray90", outline='white')
+        self.university_rst_canvas = Canvas(self.window, width=240, height=720)
+        self.university_rst_canvas.create_rectangle(0, 0, 240, 720, fill="gray65")
+        self.university_rst_canvas.create_rectangle(15, 150, 225, 280, fill="gray90", outline='white')
 
         # rect (0,240) (240,135)에 학교 사진 넣을 예정
-        self.close_univ_rstButton = Button(self.window, text='X',  width=3, command=self.closeUniversityInfoWindow)
+        self.close_rst_infoButton = Button(self.window, text='X', width=3, command=self.closeInfoWindow)
 
         location_image = PhotoImage(file='resource\\location.png')
         globe_image=PhotoImage(file='resource\\globe.png')
-        self.rst_canvas.create_image(25, 230, anchor=W, image=location_image)
-        self.rst_canvas.create_image(25, 260, anchor=W, image=globe_image)
+        self.university_rst_canvas.create_image(25, 230, anchor=W, image=location_image)
+        self.university_rst_canvas.create_image(25, 260, anchor=W, image=globe_image)
 
 
-        self.rst_canvas.create_line(0, 0, 0, 730)
-        self.rst_canvas.create_line(0, 135, 240, 135)
-        self.rst_canvas.create_line(240, 0, 240, 730)
+        self.university_rst_canvas.create_line(0, 0, 0, 730)
+        self.university_rst_canvas.create_line(0, 135, 240, 135)
+        self.university_rst_canvas.create_line(240, 0, 240, 730)
+
+
+# -----------------------------------  선택 학과 정보창 -------------------------------------------------
+        self.major_rst_canvas = Canvas(self.window, width=240, height=425)
+        self.major_rst_canvas.create_rectangle(0, 0, 240, 425, fill="gray65")
+
+        self.major_rst_canvas.create_rectangle(0, 0, 240, 30, fill="gray90")
+        self.major_rst_canvas.create_text(120, 15, text="학과 정보", font=self.temp_font)
+
 
 #----------------------------------- 여긴 지도임 -------------------------------------------------
 
@@ -142,6 +151,9 @@ class Interface:
         if len(selectedItem) != 0:
             CrawlImg.crawl(self.rst_university_list[selectedItem[0]].getSchoolName())
             self.openUniversityInfoWindow(selectedItem[0])
+            if self.major_select.current()!=-1:
+                self.openUniversityInfoWindow(selectedItem[0])
+
 
             #self.showMap(selectedItem[0])
 
@@ -186,27 +198,35 @@ class Interface:
 
 
     def openUniversityInfoWindow(self,index):
-        self.rst_canvas.delete('school_img')
+        self.university_rst_canvas.delete('school_img')
         self.school_image = PhotoImage(file='resource\\school_img.png')
-        self.rst_canvas.create_image(0, 0, anchor=NW, image=self.school_image, tags='school_img')
+        self.university_rst_canvas.create_image(0, 0, anchor=NW, image=self.school_image, tags='school_img')
 
-        self.rst_canvas.delete('school_name')
-        self.rst_canvas.delete('campus_name')
-        self.rst_canvas.delete('area')
-        self.rst_canvas.delete('school_URL')
-        self.rst_canvas.create_text(50, 170, text=self.rst_university_list[index].getSchoolName(), font=self.temp_font,anchor=W,tags= 'school_name')
-        self.rst_canvas.create_text(50, 200, text=self.rst_university_list[index].getCampusName(), font=self.temp_font,anchor=W,tags= 'campus_name')
-        self.rst_canvas.create_text(50, 230, text=self.rst_university_list[index].getArea(), font=self.temp_font,anchor=W,tags= 'area')
-        self.rst_canvas.create_text(50, 260, text=self.rst_university_list[index].getSchoolURL(), font=self.temp_font,anchor=W,tags= 'school_URL')
-        self.rst_canvas.place(x=240, y=0)
+        self.university_rst_canvas.delete('school_name')
+        self.university_rst_canvas.delete('campus_name')
+        self.university_rst_canvas.delete('area')
+        self.university_rst_canvas.delete('school_URL')
+        self.university_rst_canvas.create_text(50, 170, text=self.rst_university_list[index].getSchoolName(), font=self.temp_font, anchor=W, tags='school_name')
+        self.university_rst_canvas.create_text(50, 200, text=self.rst_university_list[index].getCampusName(), font=self.temp_font, anchor=W, tags='campus_name')
+        self.university_rst_canvas.create_text(50, 230, text=self.rst_university_list[index].getArea(), font=self.temp_font, anchor=W, tags='area')
+        self.university_rst_canvas.create_text(50, 260, text=self.rst_university_list[index].getSchoolURL(), font=self.temp_font, anchor=W, tags='school_URL')
+        self.university_rst_canvas.place(x=240, y=0)
 
-        self.close_univ_rstButton.place(x=450,y=0)
-
-
+        self.close_rst_infoButton.place(x=450, y=0)
 
     def closeUniversityInfoWindow(self):
-        self.rst_canvas.place_forget()
-        self.close_univ_rstButton.place_forget()
+        self.university_rst_canvas.place_forget()
+        self.close_rst_infoButton.place_forget()
+
+    def openMajprInfoWindow(self, index):
+        pass
+
+    def closeMajprInfoWindow(self):
+        pass
+
+    def closeInfoWindow(self):
+        self.closeUniversityInfoWindow()
+        self.closeMajprInfoWindow()
 
 
     def showMap(self, index):

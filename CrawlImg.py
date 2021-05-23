@@ -36,7 +36,7 @@ def crawl(keywords):
     counter = 0
     succounter = 0
 
-    print(os.path)
+    #print(os.path)
     if not os.path.exists('data'):
         os.mkdir('data')
     if not os.path.exists('data/' + keywords):
@@ -44,12 +44,12 @@ def crawl(keywords):
 
     for x in driver.find_elements_by_class_name('rg_i.Q4LuWd'):
         counter = counter + 1
-        print(counter)
+        #print(counter)
         # 이미지 url
         img = x.get_attribute("data-src")
         if img is None:
             img = x.get_attribute("src")
-        print(img)
+        #print(img)
 
         # 이미지 확장자
         imgtype = 'jpg'

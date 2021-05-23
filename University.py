@@ -1,5 +1,3 @@
-
-#index Enum for rst_university_list
 class University():
 
     def __init__(self,school_name,campus_name,major_name,area, school_URL):
