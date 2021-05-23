@@ -69,6 +69,8 @@ def crawl(keywords):
         except:
             print('error')
 
+
+
     #print(succounter, "succesfully downloaded")
     driver.close()
 

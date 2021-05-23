@@ -1,12 +1,19 @@
 class Major():
 
-    def __init__(self,major,salary,employment, department,job,subject_name):
+    def __init__(self,major,salary,employment, department,job,main_subject): #리스트는 미리 만들어서 리스트로 넘겨줘야함 (employment,department 등 )
         self.major = major
         self.salary = salary
         self.employment = employment
         self.department = department
         self.job = job
-        self.subject_name = subject_name
+        self.main_subject = main_subject
+
+        print(self.major)
+        print(self.salary)
+        print(self.employment)
+        print(self.department)
+        print(self.job)
+        print(self.main_subject)
 
 
     def getMajor(self):
@@ -24,8 +31,8 @@ class Major():
     def getJob(self):
         return self.job
 
-    def getSubjectName(self):
-        return self.subject_name
+    def getMainSubject(self):
+        return self.main_subject
 
 
     #성비 등 계속 추가 필요

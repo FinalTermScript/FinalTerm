@@ -83,6 +83,7 @@ class Interface:
         self.show_resultButton = Button(self.window, text='검색', width=10, command=self.showSearchResult)
         self.show_resultButton.place(x=90, y=165)
 
+        self.rst_major_list=[]
         self.rst_university_list = []
 
 # ----------------------------------- 여긴 대학교 선택 -------------------------------------------------
@@ -185,8 +186,9 @@ class Interface:
         else:
             curr_area=self.area_select['value'][self.area_select.current()]
 
+        self.rst_major_list.clear()
         self.rst_university_list.clear()
-        self.rst_university_list=self.tem.getUniversiryInfo(curr_line, curr_major, curr_area)
+        self.rst_major_list, self.rst_university_list=self.tem.getUniversiryInfo(curr_line, curr_major, curr_area)
         k = self.college_select.size()
         for i in range(k):
             self.college_select.delete(i)
