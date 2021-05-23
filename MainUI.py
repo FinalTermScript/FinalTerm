@@ -92,6 +92,7 @@ class Interface:
 
         self.college_select = Listbox(self.window, selectmode='extended',bg='gray90')
         self.college_select.bind('<<ListboxSelect>>', self.click_item)
+        self.college_select.bind('<Button-1>', self.urlLoad)
         self.college_select.place(x=15, y=245, width=210, height=445)
 
 # -----------------------------------  선택 학교 정보창 -------------------------------------------------
@@ -269,10 +270,10 @@ class Interface:
         self.window_info = cef.WindowInfo(frame.winfo_id())
         self.window_info.SetAsChild(frame.winfo_id(), self.rect)
         cef.Initialize()
-        browser = cef.CreateBrowserSync(self.window_info, url=url)
-        while thread:
-            cef.SingleMessageLoop()
+        self.browser = cef.CreateBrowserSync(self.window_info, url=url)
+        cef.MessageLoop()
 
-        print("잘통과함")
+    def urlLoad(self, event):
+        self.browser.LoadUrl("http://www.kpu.ac.kr")
 
 Interface()
