@@ -28,19 +28,13 @@ def crawl(keywords):
     # 창 숨기는 옵션 추가
     options.add_argument("headless")
     driver = webdriver.Chrome('./chromedriver',options=options)
-    driver.implicitly_wait(3)
+    #driver.implicitly_wait(3)
     driver.get(path)
     driver.maximize_window()
-    time.sleep(1)
+    #time.sleep(1)
 
     counter = 0
     succounter = 0
-
-    #print(os.path)
-    if not os.path.exists('data'):
-        os.mkdir('data')
-    if not os.path.exists('data/' + keywords):
-        os.mkdir('data/' + keywords)
 
     for x in driver.find_elements_by_class_name('rg_i.Q4LuWd'):
         counter = counter + 1
@@ -65,7 +59,7 @@ def crawl(keywords):
             img = Image.open('resource\\school_img.png')
             img_resize = img.resize((240, 135))
             img_resize.save('resource\\school_img.png')
-            break
+            return 0
         except:
             print('error')
 
