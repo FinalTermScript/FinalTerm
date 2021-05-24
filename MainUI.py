@@ -23,9 +23,10 @@ import urllib.request
 thread = True
 count = 0
 search = False
-urls = 'https://www.naver.com/'
+urls = 'https://map.naver.com/'
 class Interface:
     line_list = []
+    now_url = ""
     #country_list = []
     rect = [0, 0, 1280, 720]
     stop_thread = False
@@ -59,11 +60,10 @@ class Interface:
 # ----------------------------------- 여긴 지도임 -------------------------------------------------
 
         # 지도 이미지 받아오게 하는 부분임....
-        url = "https://www.google.co.kr/maps/@37.053745,125.6553969,5z?hl=ko"
         self.map_frame = tk.Frame(self.window, bg='white', width=1040, height=720)
         self.map_frame.place(x=240, y=0)
 
-        self.thread = threading.Thread(target=self.test_thread, args=(self.map_frame, url))
+        self.thread = threading.Thread(target=self.test_thread, args=(self.map_frame, urls))
         self.thread.setDaemon(True)
         self.thread.start()
 
@@ -299,38 +299,6 @@ class Interface:
         self.closeUniversityInfoWindow()
         self.closeMajorInfoWindow()
 
-
-    def showMap(self, index):
-        global thread
-        largura = 640
-        alturaplus = 640
-        final = Image.new("RGB", (largura, alturaplus))
-
-        self.gmaps = googlemaps.Client(key=self.__key)
-        geocode_result = self.gmaps.geocode(str(self.rst_university_list[index].getSchoolName()), language='ko')
-        print(geocode_result)
-
-        if len(geocode_result) != 0:
-            lat = geocode_result[0]['geometry']['location']['lat']
-            lng = geocode_result[0]['geometry']['location']['lng']
-            addr = geocode_result[0]['formatted_address']
-            urlparams = urllib.parse.urlencode({'center': self.rst_university_list[index].getSchoolName(),
-                                            'zoom': '16',
-                                            'size': '%dx%d' % (1280, 1280),
-                                            'maptype': 'ROADMAP',
-                                            'markers': 'color:blue|label:S|' + str(lat) + "," + str(lng),
-                                            'key': self.__key})
-            url = "www.naver.com"
-            thread = False
-            print(self.thread.is_alive())
-            self.thread.join()
-            thread = True
-
-            # 여기까진 잘 종료됨 ㅆ ㅂ
-
-        else:
-            pass
-
     def test_thread(self, frame, url):
         global thread, urls
 
@@ -342,7 +310,10 @@ class Interface:
         cef.MessageLoop()
 
     def urlLoad(self, event):
-        url = "https://www.google.co.kr/maps/place/" + str(self.rst_university_list[self.index].getSchoolName())
-        self.browser.LoadUrl(url)
+        url = 'https://map.naver.com/v5/search/' + str(self.rst_university_list[self.index].getSchoolName())
+        if self.now_url != url:
+            self.browser.StopLoad()
+            self.now_url = url
+            self.browser.LoadUrl(url)
 
 Interface()

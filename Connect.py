@@ -56,7 +56,7 @@ class CarrerNetPassing:
                     continue
                 major_seq = university.find("majorSeq").text
                 major_seq_list.append(major_seq)
-                print(major_seq)
+                #print(major_seq)
                 break
 
         # 탐색한 학과코드로 재요청
