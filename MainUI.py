@@ -110,7 +110,7 @@ class Interface:
 
         self.college_select = Listbox(self.window, selectmode='extended',bg=self.box_color)
         self.college_select.bind('<<ListboxSelect>>', self.click_item)
-        self.college_select.bind('<Button-1>', self.urlLoad)
+        #self.college_select.bind('<Button-1>', self.urlLoad)
         self.college_select.place(x=15, y=245, width=210, height=445)
 
 # -----------------------------------  선택 학교 정보창 -------------------------------------------------
@@ -180,7 +180,7 @@ class Interface:
             self.load_college = self.rst_university_list[selectedItem[0]].getSchoolName()
             CrawlImg.crawl(self.rst_university_list[selectedItem[0]].getSchoolName())
             self.openInfoWindow(selectedItem[0])
-
+        self.urlLoad()
             #self.showMap(selectedItem[0])
 
 
@@ -310,11 +310,11 @@ class Interface:
         self.browser = cef.CreateBrowserSync(self.window_info, url=url)
         cef.MessageLoop()
 
-    def urlLoad(self, event):
+    def urlLoad(self):
         url = 'https://map.naver.com/v5/search/' + str(self.load_college)
-        if self.now_url != url:
-            self.browser.StopLoad()
-            self.now_url = url
-            self.browser.LoadUrl(url)
+        self.browser.StopLoad()
+        self.now_url = url
+        self.browser.LoadUrl(url)
 
 Interface()
+cef.Shutdown()
