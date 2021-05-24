@@ -30,7 +30,7 @@ class Interface:
     #country_list = []
     rect = [0, 0, 1280, 720]
     stop_thread = False
-    index = 0
+    load_college = ''
     def sendmail(self):
         pass
 
@@ -177,6 +177,7 @@ class Interface:
     def click_item(self, event):
         selectedItem = self.college_select.curselection()
         if len(selectedItem) != 0:
+            self.load_college = self.rst_university_list[selectedItem[0]].getSchoolName()
             CrawlImg.crawl(self.rst_university_list[selectedItem[0]].getSchoolName())
             self.openInfoWindow(selectedItem[0])
 
@@ -310,7 +311,7 @@ class Interface:
         cef.MessageLoop()
 
     def urlLoad(self, event):
-        url = 'https://map.naver.com/v5/search/' + str(self.rst_university_list[self.index].getSchoolName())
+        url = 'https://map.naver.com/v5/search/' + str(self.load_college)
         if self.now_url != url:
             self.browser.StopLoad()
             self.now_url = url
