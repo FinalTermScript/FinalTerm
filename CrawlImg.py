@@ -56,14 +56,11 @@ def crawl(keywords):
             File.write(raw_img)
             File.close()
 
-            img = Image.open('resource\\school_img.png')
-            img_resize = img.resize((240, 135))
-            img_resize.save('resource\\school_img.png')
+            resized_img = Image.open('resource\\school_img.png').resize((240, 135))
+            resized_img.save('resource\\school_img.png')
             return 0
         except:
             print('error')
-
-
 
     #print(succounter, "succesfully downloaded")
     driver.close()

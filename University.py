@@ -7,6 +7,7 @@ class University():
         self.area = area
         self.school_URL = school_URL
 
+
     def getSchoolName(self):
         return self.school_name
 
@@ -21,3 +22,4 @@ class University():
 
     def getSchoolURL(self):
         return self.school_URL
+

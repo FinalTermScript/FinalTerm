@@ -119,7 +119,14 @@ class CarrerNetPassing:
                 for subject in main_subject_list.iter("content"):
                     main_subject.append(subject.find('SBJECT_NM').text)
 
-            return Major.Major(major, salary, employment, department, job, main_subject)
+            male_percent=''
+            male_percentElements = element.iter("gender")
+            for male_percent_list in male_percentElements:
+                for gender in male_percent_list.iter("content"):
+                    male_percent=gender.find('data').text
+                    break
+
+            return Major.Major(major, salary, employment, department, job, main_subject,male_percent)
 
 
 
