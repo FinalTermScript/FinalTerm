@@ -32,7 +32,6 @@ def crawl(keywords):
     driver.get(path)
     driver.maximize_window()
     #time.sleep(1)
-
     counter = 0
     succounter = 0
 
@@ -58,11 +57,14 @@ def crawl(keywords):
 
             resized_img = Image.open('resource\\school_img.png').resize((240, 135))
             resized_img.save('resource\\school_img.png')
+            driver.close()
+            driver.quit()
             return 0
         except:
             print('error')
+            driver.close()
+            driver.quit()
 
     #print(succounter, "succesfully downloaded")
-    driver.close()
 
 
