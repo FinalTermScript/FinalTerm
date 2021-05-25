@@ -75,6 +75,7 @@ def crawl(keywords):
 
 def closeDriver():
     global driver
+    driver.close()
     driver.quit()
     #print(succounter, "succesfully downloaded")
 
