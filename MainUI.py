@@ -36,6 +36,7 @@ class Interface:
 
     def __init__(self):
         global search
+        CrawlImg.onWebBrowser()
         #======= 구글 지도 api key ========
         self.__key = "AIzaSyDyJvpUNI8aZh0pPu-SRG-HBdDbxwyg4Tw"
         #==================================
@@ -318,3 +319,4 @@ class Interface:
 
 Interface()
 cef.Shutdown()
+CrawlImg.closeDriver()

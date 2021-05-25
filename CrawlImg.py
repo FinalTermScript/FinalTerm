@@ -9,6 +9,17 @@ from PIL import Image
 chrome_options = Options()
 chrome_options.add_argument("--proxy-server=socks5://127.0.0.1:9150")
 
+option = None
+dirver = None
+
+
+def onWebBrowser():
+    global option, driver
+    options = webdriver.ChromeOptions()
+    # 창 숨기는 옵션 추가
+    options.add_argument("headless")
+    driver = webdriver.Chrome('./chromedriver',options=options)
+
 
 def doScrollDown(whileSeconds, driver):
     start = datetime.datetime.now()
@@ -23,11 +34,12 @@ header_n = {
     'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36"}
 
 def crawl(keywords):
+    global driver, option
     path = "https://www.google.com/search?q=" + keywords + "&newwindow=1&rlz=1C1CAFC_enKR908KR909&sxsrf=ALeKk01k_BlEDFe_0Pv51JmAEBgk0mT4SA:1600412339309&source=lnms&tbm=isch&sa=X&ved=2ahUKEwj07OnHkPLrAhUiyosBHZvSBIUQ_AUoAXoECA4QAw&biw=1536&bih=754"
-    options = webdriver.ChromeOptions()
+    #options = webdriver.ChromeOptions()
     # 창 숨기는 옵션 추가
-    options.add_argument("headless")
-    driver = webdriver.Chrome('./chromedriver',options=options)
+    #options.add_argument("headless")
+    #driver = webdriver.Chrome('./chromedriver',options=options)
     #driver.implicitly_wait(3)
     driver.get(path)
     driver.maximize_window()
@@ -57,14 +69,13 @@ def crawl(keywords):
 
             resized_img = Image.open('resource\\school_img.png').resize((240, 135))
             resized_img.save('resource\\school_img.png')
-            driver.close()
-            driver.quit()
             return 0
         except:
             print('error')
-            driver.close()
-            driver.quit()
 
+def closeDriver():
+    global driver
+    driver.quit()
     #print(succounter, "succesfully downloaded")
 
 
