@@ -278,7 +278,7 @@ class Interface:
                                           anchor=NW, width=190, tags='job')
         self.major_rst_canvas.create_text(25, 495, text="취업률: " + self.rst_major_list[0].getEmployment()+'%',
                                           font=self.temp_font, anchor=NW, width=190, tags='employment')
-        self.major_rst_canvas.create_text(25, 535, text="평균 월급: " + self.rst_major_list[0].getSalary() + '%',
+        self.major_rst_canvas.create_text(25, 535, text="평균 월급: " + self.rst_major_list[0].getSalary() + '만원',
                                           font=self.temp_font, anchor=NW, width=190, tags='salary')
         self.major_rst_canvas.create_text(25, 575, text="남녀 성비: ", font=self.temp_font, anchor=NW, width=190, tags='gender')
 
