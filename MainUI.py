@@ -312,10 +312,17 @@ class Interface:
         cef.MessageLoop()
 
     def urlLoad(self):
+        global urls
         url = 'https://map.naver.com/v5/search/' + str(self.load_college)
         self.browser.StopLoad()
         self.now_url = url
         self.browser.LoadUrl(url)
+        if url != urls:
+            self.browser.StopLoad()
+            urls = url
+            self.browser.LoadUrl(url)
+
+
 
 Interface()
 cef.Shutdown()
