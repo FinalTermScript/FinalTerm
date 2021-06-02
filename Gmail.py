@@ -1,31 +1,21 @@
-import mimetypes
-import mysmtplib
-from email.mime.base import MIMEBase
+import smtplib
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
-host = "smtp.gmail.com" # Gmail STMP 서버 주소.
-port = "587"
-senderAddr = 'kwb010712@gmail.com'
-recipientAddr = 'kwb010712@naver.com'
-def SetHost():
-    pass
+def email_send(from_email, to_email, title='', content=''):
 
-def reciptAddr(string):
-    recipientAddr = string
+    if from_email and to_email :
+        print('이메일 전송')
+        smtp = smtplib.SMTP('smtp.gmail.com', 25)
+        smtp.ehlo()  # say Hello
+        smtp.starttls()  # TLS 사용시 필요
+        smtp.login('아이디', '비밀번호')
 
-def sendMessage(rst):
-    msg = MIMEBase("multipart", "alternative")
-    msg['Subject'] = "원하시던 대학 학과 정보 입니다!"
-    msg['From'] = senderAddr
-    msg['To'] = recipientAddr
+        msg = MIMEMultipart("alternative")
+        msg.attach(MIMEText(content, "html", _charset="utf8"))
+        msg['Subject'] = title
+        msg['To'] = to_email
 
-    s = mysmtplib.MySMTP(host, port)
-    # s.set_debuglevel(1)        # 디버깅이 필요할 경우 주석을 푼다.
-    s.ehlo()
-    s.starttls()
-    s.ehlo()
-    s.login("본인이메일적고테스트", "********")
-    s.sendmail(senderAddr, [recipientAddr], msg.as_string())
-    s.close()
-
-sendMessage(1)
+        # (보내는메일, 받는메일, 전송내용)
+        smtp.sendmail(from_email, to_email, msg.as_string())
+        smtp.quit()

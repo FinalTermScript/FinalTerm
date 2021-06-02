@@ -12,6 +12,7 @@ from cefpython3 import cefpython as cef
 import sys
 import threading
 
+import Gmail
 from PIL import Image
 from io import BytesIO
 
@@ -32,7 +33,11 @@ class Interface:
     stop_thread = False
     load_college = ''
     def sendmail(self):
-        pass
+        # email_send의 첫번째 인자 : 누가 보내는지
+        # email_send의 두번째 인자 : 목적지 이메일 주소
+        # email_send의 세번째 인자 : 이메일 제목
+        # email_send의 네번째 인자 : 내용!
+        Gmail.email_send("", "", "요청하신 대학정보", "테스트중입니다.")
 
     def __init__(self):
         global search
