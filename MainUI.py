@@ -149,21 +149,37 @@ class Interface:
         self.major_rst_canvas.create_line(25, 365, 215, 365, fill='gray80')
         self.major_rst_canvas.create_line(25, 485, 215, 485, fill='gray80')
         self.major_rst_canvas.create_line(25, 525, 215, 525, fill='gray80')
-        self.major_rst_canvas.create_line(25, 565, 215, 565, fill='gray80')
+        #self.major_rst_canvas.create_line(25, 620, 215, 620, fill='gray80')
 
-        self.major_rst_canvas.create_line(30, 640, 210, 640)
-        self.major_rst_canvas.create_line(30, 640, 30, 650)#0
-        self.major_rst_canvas.create_line(75, 640, 75, 650)#25
-        self.major_rst_canvas.create_line(130, 640, 130, 650)#50
-        self.major_rst_canvas.create_line(175, 640, 175, 650)#75
-        self.major_rst_canvas.create_line(210, 640, 210, 650)#100
+# ----------------------------------- 취업률 그래프 -----------------------------------
+        self.major_rst_canvas.create_line(30, 590, 210, 590)
+        self.major_rst_canvas.create_line(30, 590, 30, 600)  # 0
+        self.major_rst_canvas.create_line(75, 590, 75, 600)  # 25
+        self.major_rst_canvas.create_line(120, 590, 120, 600)  # 50
+        self.major_rst_canvas.create_line(165, 590, 165, 600)  # 75
+        self.major_rst_canvas.create_line(210, 590, 210, 600)  # 100
 
         self.temp_mini_font = font.Font(size=8, family='italic')
-        self.major_rst_canvas.create_text(30, 655, text="0", anchor=N,font=self.temp_mini_font)
-        self.major_rst_canvas.create_text(75, 655, text="25", anchor=N, font=self.temp_mini_font)
-        self.major_rst_canvas.create_text(130, 655, text="50", anchor=N, font=self.temp_mini_font)
-        self.major_rst_canvas.create_text(175, 655, text="75", anchor=N, font=self.temp_mini_font)
-        self.major_rst_canvas.create_text(210, 655, text="100", anchor=N, font=self.temp_mini_font)
+        self.major_rst_canvas.create_text(30, 605, text="0", anchor=N, font=self.temp_mini_font)
+        self.major_rst_canvas.create_text(75, 605, text="25", anchor=N, font=self.temp_mini_font)
+        self.major_rst_canvas.create_text(120, 605, text="50", anchor=N, font=self.temp_mini_font)
+        self.major_rst_canvas.create_text(165, 605, text="75", anchor=N, font=self.temp_mini_font)
+        self.major_rst_canvas.create_text(210, 605, text="100", anchor=N, font=self.temp_mini_font)
+
+# ----------------------------------- 남녀 성비 그래프 -----------------------------------
+        self.major_rst_canvas.create_line(30, 680, 210, 680)
+        self.major_rst_canvas.create_line(30, 680, 30, 690)#0
+        self.major_rst_canvas.create_line(75, 680, 75, 690)#25
+        self.major_rst_canvas.create_line(120, 680, 120, 690)#50
+        self.major_rst_canvas.create_line(165, 680, 165, 690)#75
+        self.major_rst_canvas.create_line(210, 680, 210, 690)#100
+
+        self.temp_mini_font = font.Font(size=8, family='italic')
+        self.major_rst_canvas.create_text(30, 695, text="0", anchor=N,font=self.temp_mini_font)
+        self.major_rst_canvas.create_text(75, 695, text="25", anchor=N, font=self.temp_mini_font)
+        self.major_rst_canvas.create_text(120, 695, text="50", anchor=N, font=self.temp_mini_font)
+        self.major_rst_canvas.create_text(165, 695, text="75", anchor=N, font=self.temp_mini_font)
+        self.major_rst_canvas.create_text(210, 695, text="100", anchor=N, font=self.temp_mini_font)
 
 #----------------------------------- 이메일 버튼 -------------------------------------------------
 
@@ -266,8 +282,11 @@ class Interface:
         self.major_rst_canvas.delete('employment')
         self.major_rst_canvas.delete('salary')
         self.major_rst_canvas.delete('gender')
-        self.major_rst_canvas.delete('graph_male')
-        self.major_rst_canvas.delete('graph_female')
+        self.major_rst_canvas.delete('graph_gender_male')
+        self.major_rst_canvas.delete('graph_gender_female')
+        self.major_rst_canvas.delete('employment_perent')
+        self.major_rst_canvas.delete('graph_gender_female')
+        self.major_rst_canvas.delete('employment_percent_text')
 
         self.major_rst_canvas.create_text(25, 55, text="학과 이름: "+self.rst_major_list[0].getMajor(),font=self.temp_font, anchor=NW, width=190, tags='major')
 
@@ -281,16 +300,20 @@ class Interface:
                                           tags='job_title')
         self.major_rst_canvas.create_text(35, 395, text=self.rst_major_list[0].getJob(), font=self.temp_font,
                                           anchor=NW, width=190, tags='job')
-        self.major_rst_canvas.create_text(25, 495, text="취업률: " + self.rst_major_list[0].getEmployment()+'%',
-                                          font=self.temp_font, anchor=NW, width=190, tags='employment')
-        self.major_rst_canvas.create_text(25, 535, text="평균 월급: " + self.rst_major_list[0].getSalary() + '만원',
+        self.major_rst_canvas.create_text(25, 495, text="평균 월급: " + self.rst_major_list[0].getSalary()+'만원',
                                           font=self.temp_font, anchor=NW, width=190, tags='salary')
-        self.major_rst_canvas.create_text(25, 575, text="남녀 성비: ", font=self.temp_font, anchor=NW, width=190, tags='gender')
+
+        self.major_rst_canvas.create_text(25, 535, text="취업률: ", font=self.temp_font, anchor=NW, width=190, tags='employment')
+        employment_perent=float(self.rst_major_list[0].getEmployment())
+        self.major_rst_canvas.create_rectangle(30, 560, 30 + (210 - 30) / 100.0 * employment_perent, 580, fill='blue',
+                                               tag='employment_perent')
+        self.major_rst_canvas.create_text(30 + (210 - 30) / 100.0 * employment_perent + 10 , 560, text=str(employment_perent) + '%', font=self.temp_font, anchor=NW, width=190, tags='employment_percent_text')
 
 
+        self.major_rst_canvas.create_text(25, 625, text="남녀 성비: ", font=self.temp_font, anchor=NW, width=190, tags='gender')
         male_percent = float(self.rst_major_list[0].getMalePercent())
-        self.major_rst_canvas.create_rectangle(30, 610, 30+ (210-30)/100.0 * male_percent, 630, fill='blue',tag='graph_male')
-        self.major_rst_canvas.create_rectangle(30 + (210 - 30) / 100.0 * male_percent, 610, 210, 630, fill='red',tag='graph_female')
+        self.major_rst_canvas.create_rectangle(30, 650, 30+ (210-30)/100.0 * male_percent, 670, fill='blue',tag='graph_gender_male')
+        self.major_rst_canvas.create_rectangle(30 + (210 - 30) / 100.0 * male_percent, 650, 210, 670, fill='red',tag='graph_gender_female')
 
         self.major_rst_canvas.place(x=240, y=0)
 
