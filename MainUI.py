@@ -46,11 +46,8 @@ class Interface:
 
     def send(self):
         Gmail.MakeConcept(self.mail_college, self.rst_major_list[0], self.college_url, Entry.get(self.emaill))
-        self.mailFrame.place_forget()
-        self.closeMail.place_forget()
-        self.emaill.place_forget()
-        self.emaillLabel.place_forget()
-        self.sendButton.place_forget()
+        self.mailFrame.destroy()
+
 
     def sendmail(self):
         # email_send의 첫번째 인자 : 누가 보내는지
@@ -58,18 +55,16 @@ class Interface:
         # email_send의 세번째 인자 : 이메일 제목
         # email_send의 네번째 인자 : 내용!
         #Gmail.email_send("", "", "요청하신 대학정보", "테스트중입니다.")
-        self.mailFrame = Frame(self.window, width=200, height=100)
-        self.mailFrame.place(x=1080, y=0)
-        self.closeMail = Button(self.window, text='X', width=3, command=self.closeSendmail)
-        self.closeMail.place(x=1250, y=0)
-        self.emaillLabel = Label(self.window, text="이메일을 입력하세요")
-        self.emaillLabel.place(x=1120, y=10)
-        self.emaill = Entry(self.window, text="이메일을 입력하세요")
-        self.emaill.place(x=1110, y=40)
-        self.emaill.focus()
+        self.mailFrame = Tk()
+        self.mailFrame.geometry("200x100")
+        self.emaillLabel = Label(self.mailFrame, text="이메일을 입력하세요")
+        self.emaillLabel.place(x=40, y=10)
+        self.emaill = Entry(self.mailFrame, text="이메일을 입력하세요")
+        self.emaill.place(x=25, y=40)
+        self.emaill.focus_set()
         self.browser.StopLoad()
-        self.sendButton = Button(self.window, text="전송", command=self.send)
-        self.sendButton.place(x=1140, y=70)
+        self.sendButton = Button(self.mailFrame, text="전송", command=self.send)
+        self.sendButton.place(x=50, y=70)
 
         #Gmail.MakeConcept(self.mail_college, self.rst_major_list[0], self.college_url)
 
