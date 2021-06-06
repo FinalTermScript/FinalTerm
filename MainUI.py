@@ -33,13 +33,15 @@ class Interface:
     stop_thread = False
     load_college = ''
     mail_college = ''
+    college_url = ''
+    map_url = ''
     def sendmail(self):
         # email_send의 첫번째 인자 : 누가 보내는지
         # email_send의 두번째 인자 : 목적지 이메일 주소
         # email_send의 세번째 인자 : 이메일 제목
         # email_send의 네번째 인자 : 내용!
         #Gmail.email_send("", "", "요청하신 대학정보", "테스트중입니다.")
-        Gmail.MakeConcept(self.mail_college, self.rst_major_list[0])
+        Gmail.MakeConcept(self.mail_college, self.rst_major_list[0], self.college_url)
 
     def __init__(self):
         global search
@@ -65,6 +67,7 @@ class Interface:
         self.bg_color="gray65"
         self.box_color="gray90"
 
+
 # ----------------------------------- 여긴 지도임 -------------------------------------------------
 
         # 지도 이미지 받아오게 하는 부분임....
@@ -74,6 +77,10 @@ class Interface:
         self.thread = threading.Thread(target=self.test_thread, args=(self.map_frame, urls))
         self.thread.setDaemon(True)
         self.thread.start()
+
+
+        self.mapButton = Button(self.window, text="지도",width=10, command=self.buttonMapUrlChange)
+        self.collegeButton = Button(self.window, text="학교사이트",width=10, command=self.buttonCollegeUrlChange)
 
 # ----------------------------------- 여긴 계열 선택 ----------------------------------------------\
         self.canvas.create_rectangle(0, 0, 240, 720, fill=self.bg_color)
@@ -193,6 +200,9 @@ class Interface:
 
         self.canvas.create_line(0, 200, 240,200)
 
+        self.mapButton.place(x=1145, y=0)
+        self.collegeButton.place(x=1145, y=24)
+
 
         self.window.mainloop()
 
@@ -265,7 +275,8 @@ class Interface:
         self.university_rst_canvas.create_text(50, 200, text=self.rst_university_list[index].getCampusName(), font=self.temp_font, anchor=W, tags='campus_name')
         self.university_rst_canvas.create_text(50, 230, text=self.rst_university_list[index].getArea(), font=self.temp_font, anchor=W, tags='area')
         self.university_rst_canvas.create_text(50, 260, text=self.rst_university_list[index].getSchoolURL(), font=self.temp_font, anchor=W, tags='school_URL')
-
+        self.college_url = ''
+        self.college_url = self.rst_university_list[index].getSchoolURL()
         if self.major_select.current() != -1:
             self.university_rst_canvas.place(x=480, y=0)
             self.close_rst_infoButton.place(x=690, y=0)
@@ -345,9 +356,16 @@ class Interface:
         self.browser = cef.CreateBrowserSync(self.window_info, url=url)
         cef.MessageLoop()
 
+    def buttonMapUrlChange(self):
+        self.browser.LoadUrl(self.map_url)
+
+    def buttonCollegeUrlChange(self):
+        self.browser.LoadUrl(self.college_url)
+
     def urlLoad(self):
         global urls
         url = 'https://map.naver.com/v5/search/' + str(self.load_college)
+        self.map_url = url
         self.browser.StopLoad()
         self.now_url = url
         self.browser.LoadUrl(url)
@@ -355,6 +373,7 @@ class Interface:
             self.browser.StopLoad()
             urls = url
             self.browser.LoadUrl(url)
+
 
 
 

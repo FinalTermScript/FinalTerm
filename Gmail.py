@@ -76,13 +76,14 @@ class EmailSender:
         self.ss.send_message(cc, from_addr=str_from_email_addr, to_addrs=str_to_eamil_addrs)
         del cc
 
-def MakeConcept(college_name, RST):
+def MakeConcept(college_name, RST, url):
     str_subject = '요청하신 대학 정보 입니다. with FLY'
     template = Template("<html>:"
                                 "<head></head>"
                                 "<body>"
                                     "<img src=""cid:my_image1""><br>"
                                     "학교 : "+str(college_name)+"<br>"
+                                    "학교 사이트 :"+str(url)+"<br>"
                                     "학과 이름 :"+str(RST.getMajor())+"<br>"
                                     "세부 학과 :"+str(RST.getDepartment())+"<br>"
                                     "주요 과목 :"+str(RST.getMainSubject())+"<br>"
