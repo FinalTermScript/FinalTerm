@@ -131,7 +131,6 @@ class CarrerNetPassing:
 
 
 
-
     def getUniversiryInfo_line(self, line):  # 여기서 계열 선택시 xml 로드함
         conn = http.client.HTTPConnection(self.__Server)
         self.str = "http://www.career.go.kr/cnet/openapi/getOpenApi?apiKey=fecd1f7f737539284f53c14621096584&svcType=api&svcCode=MAJOR&contentType=xml&gubun=univ_list"
@@ -162,9 +161,6 @@ class CarrerNetPassing:
                     rst_major_list.append(i)
 
             return rst_major_list
-
-
-
 
 
 CarrerNetPassing()

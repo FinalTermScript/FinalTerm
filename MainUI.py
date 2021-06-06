@@ -251,10 +251,8 @@ class Interface:
         self.urlLoad()
             #self.showMap(selectedItem[0])
 
-
     def changeMajor(self, index, value, op):
         self.major_select['value'] = self.tem.getUniversiryInfo_line(self.brand[self.line_select.current()])
-
 
     def showSearchResult(self):
 
