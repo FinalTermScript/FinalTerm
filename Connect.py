@@ -59,6 +59,7 @@ class CarrerNetPassing:
                 #print(major_seq)
                 break
 
+
         # 탐색한 학과코드로 재요청
         rst_university_name_list = []
         major=[]
