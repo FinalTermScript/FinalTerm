@@ -17,7 +17,7 @@ from PIL import Image
 from io import BytesIO
 
 import urllib.request
-
+import TelegramBot
 
 
 
@@ -203,6 +203,8 @@ class Interface:
         self.mapButton.place(x=1145, y=0)
         self.collegeButton.place(x=1145, y=24)
 
+# ----------------------------------- 텔레그렘 -------------------------------------------------
+        self.bot=TelegramBot.TelepotBot()
 
         self.window.mainloop()
 
