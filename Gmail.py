@@ -76,7 +76,7 @@ class EmailSender:
         self.ss.send_message(cc, from_addr=str_from_email_addr, to_addrs=str_to_eamil_addrs)
         del cc
 
-def MakeConcept(college_name, RST, url):
+def MakeConcept(college_name, RST, url, des):
     str_subject = '요청하신 대학 정보 입니다. with FLY'
     template = Template("<html>:"
                                 "<head></head>"
@@ -98,6 +98,6 @@ def MakeConcept(college_name, RST, url):
     emailHTMLImageContent = EmailHTMLImageContent(str_subject, str_image_file_name, str_cid_name, template, template_params)
 
     str_from_email_addr = 'kwb010712@gmail.com'  # 발신자
-    str_to_email_addrs = 'kwb010712@naver.com' # 수신자리스트
+    str_to_email_addrs = str(des) # 수신자리스트
     Tp = EmailSender("smtp.gmail.com")
     Tp.send_message(emailHTMLImageContent, str_from_email_addr, str_to_email_addrs)
