@@ -26,13 +26,18 @@ class TelepotBot:
         text = msg['text']
         args = text.split(' ')
         if args[0] == '계열' and  len(args) ==1:
-            print('try to 계열', args[1])
+            print('try to 계열', args[0])
+            line_list = "인문계열, 사회계열, 교육계열, 공학계열, 자연계열, 의약계열, 예체능계열"
+            self.sendMessage(chat_id, line_list)
+
 
         elif args[0] == '학과' and  len(args) ==1:
-            print('try to 계열학과', args[1])
+            print('try to 계열학과', args[0])
 
         elif args[0] == '지역' and  len(args) ==1 :
-            print('try to 지역', args[1])
+            print('try to 지역', args[0])
+            area_list = "서울특별시, 인천광역시, 부산광역시, 대전광역시, 대구광역시, 광주광역시, 울산광역시, 경기도, 충청북도, 충청남도, 경상북도, 경상남도, 강원도, 전라북도, 전라남도, 제주도"
+            self.sendMessage(chat_id, area_list)
 
         elif text.startswith('계열') and len(args) > 1:
             print('try to 계열 [계열이름]', args[1])
