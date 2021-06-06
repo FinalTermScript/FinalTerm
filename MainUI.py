@@ -253,16 +253,8 @@ class Interface:
 
 
     def changeMajor(self, index, value, op):
-        self.temp = self.tem.getUniversiryInfo_line(self.line_select.current())
-        tree = ET.ElementTree(ET.fromstring(self.temp))
-        note = tree.iter('facilName')
-        self.line_list.clear()
-        for elt in tree.iter('facilName'):
-            temp = [x for x in elt.text.split(',')]
-            for i in temp:
-                self.line_list.append(i)
+        self.major_select['value'] = self.tem.getUniversiryInfo_line(self.brand[self.line_select.current()])
 
-        self.major_select['value'] = self.line_list
 
     def showSearchResult(self):
 
