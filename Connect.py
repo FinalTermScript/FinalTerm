@@ -135,16 +135,36 @@ class CarrerNetPassing:
     def getUniversiryInfo_line(self, line):  # 여기서 계열 선택시 xml 로드함
         conn = http.client.HTTPConnection(self.__Server)
         self.str = "http://www.career.go.kr/cnet/openapi/getOpenApi?apiKey=fecd1f7f737539284f53c14621096584&svcType=api&svcCode=MAJOR&contentType=xml&gubun=univ_list"
-        if line == 0:
-            conn.request("GET", self.str)
-        else:
-            line += 100390
-            conn.request("GET", self.str + "&subject=" + str(line))
+        line_list = ["전체", "인문계열", "사회계열", "교육계열", "공학계열", "자연계열", "의약계열", "예체능계열"]
 
-        rq = conn.getresponse()
-        result = rq.read().decode('utf-8')
-        # print(result)
-        return result
+        is_line_in_list=False
+        for i in range(len(line_list)):
+            if line == line_list[i]:
+                if i==0:
+                    conn.request("GET", self.str)
+                else:
+                    carrernet_line_num = i+100390
+                    conn.request("GET", self.str + "&subject=" + str(carrernet_line_num))
+
+                is_line_in_list = True
+                break
+        if is_line_in_list==False:
+            return False
+        else:
+            rq = conn.getresponse()
+            result = rq.read().decode('utf-8')
+            tree = ET.ElementTree(ET.fromstring(result))
+
+            rst_major_list=[]
+            for elt in tree.iter('facilName'):
+                temp = [x for x in elt.text.split(',')]
+                for i in temp:
+                    rst_major_list.append(i)
+
+            return rst_major_list
+
+
+
 
 
 CarrerNetPassing()
