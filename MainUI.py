@@ -32,13 +32,14 @@ class Interface:
     rect = [0, 0, 1280, 720]
     stop_thread = False
     load_college = ''
+    mail_college = ''
     def sendmail(self):
         # email_send의 첫번째 인자 : 누가 보내는지
         # email_send의 두번째 인자 : 목적지 이메일 주소
         # email_send의 세번째 인자 : 이메일 제목
         # email_send의 네번째 인자 : 내용!
         #Gmail.email_send("", "", "요청하신 대학정보", "테스트중입니다.")
-        Gmail.MakeConcept(self.rst_major_list[0])
+        Gmail.MakeConcept(self.mail_college, self.rst_major_list[0])
 
     def __init__(self):
         global search
@@ -200,8 +201,10 @@ class Interface:
     def click_item(self, event):
         selectedItem = self.college_select.curselection()
         if len(selectedItem) != 0:
+            self.mail_college = ''
             self.load_college = self.rst_university_list[selectedItem[0]].getSchoolName()
             CrawlImg.crawl(self.rst_university_list[selectedItem[0]].getSchoolName())
+            self.mail_college = self.rst_university_list[selectedItem[0]].getSchoolName()
             self.openInfoWindow(selectedItem[0])
         self.urlLoad()
             #self.showMap(selectedItem[0])
