@@ -37,7 +37,8 @@ class Interface:
         # email_send의 두번째 인자 : 목적지 이메일 주소
         # email_send의 세번째 인자 : 이메일 제목
         # email_send의 네번째 인자 : 내용!
-        Gmail.email_send("", "", "요청하신 대학정보", "테스트중입니다.")
+        #Gmail.email_send("", "", "요청하신 대학정보", "테스트중입니다.")
+        Gmail.MakeConcept(self.rst_major_list[0])
 
     def __init__(self):
         global search
@@ -217,9 +218,11 @@ class Interface:
         else:
             curr_area=self.area_select['value'][self.area_select.current()]
 
+
         self.rst_major_list.clear()
         self.rst_university_list.clear()
         self.rst_major_list, self.rst_university_list=self.tem.getUniversiryInfo(curr_line, curr_major, curr_area)
+        print(self.rst_major_list, self.rst_university_list)
         k = self.college_select.size()
         for i in range(k):
             self.college_select.delete(i)
