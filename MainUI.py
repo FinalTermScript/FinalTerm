@@ -89,9 +89,7 @@ class Interface:
         self.window.title("너의 편입은? Fly")
 
         self.window.geometry("1280x720")
-        self.bgimage = PhotoImage(file='resource\\bg.png') #<- 이미지를 마음에 드는걸로 바꾸면됨 :)
         self.canvas = Canvas(self.window, width=1280, height=720)
-        self.canvas.create_image(0,0,anchor=NW, image=self.bgimage)
         self.canvas.place(x=0, y=0)
         self.temp_font=font.Font(size=10, weight='bold', family='italic')
 
