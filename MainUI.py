@@ -13,12 +13,14 @@ import sys
 import threading
 
 import Gmail
+import time
 from PIL import Image
 from io import BytesIO
 
 import urllib.request
 import TelegramBot
 
+import spam
 
 
 thread = True
@@ -45,8 +47,13 @@ class Interface:
 
 
     def send(self):
+        time.sleep(10)
         Gmail.MakeConcept(self.mail_college, self.rst_major_list[0], self.college_url, Entry.get(self.emaill))
         self.mailFrame.destroy()
+
+    def ccc(self, event):
+        self.emaillLabel['text'] = str(spam.send()) + str(Entry.get(self.emaill))
+        self.emaillLabel.place(x=20,y=10)
 
 
     def sendmail(self):
@@ -60,6 +67,7 @@ class Interface:
         self.emaillLabel = Label(self.mailFrame, text="이메일을 입력하세요")
         self.emaillLabel.place(x=40, y=10)
         self.emaill = Entry(self.mailFrame, text="이메일을 입력하세요")
+        self.emaill.bind("<Key>", self.ccc)
         self.emaill.place(x=25, y=40)
         self.emaill.focus_set()
         self.browser.StopLoad()
